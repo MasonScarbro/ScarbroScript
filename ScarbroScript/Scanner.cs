@@ -97,6 +97,10 @@ namespace ScarbroScript
                         // A comment goes until the end of the line.
                         while (Peek() != '\n' && !IsAtEnd()) Advance();
                     }
+                    if (Match('*'))
+                    {
+                        while (Peek() != '*' && !Match('/') && !IsAtEnd()) Advance();
+                    }
                     else
                     {
                         AddToken(TokenType.SLASH);

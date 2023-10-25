@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.33801.447
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScarbroScript", "ScarbroScript\ScarbroScript.csproj", "{431C5F71-7365-4EFE-B983-BC04CBC0D289}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools", "Tools\Tools.csproj", "{E3A7054F-5397-43C3-BD59-B40E0CC38E34}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{431C5F71-7365-4EFE-B983-BC04CBC0D289}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{431C5F71-7365-4EFE-B983-BC04CBC0D289}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{431C5F71-7365-4EFE-B983-BC04CBC0D289}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3A7054F-5397-43C3-BD59-B40E0CC38E34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3A7054F-5397-43C3-BD59-B40E0CC38E34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3A7054F-5397-43C3-BD59-B40E0CC38E34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3A7054F-5397-43C3-BD59-B40E0CC38E34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
