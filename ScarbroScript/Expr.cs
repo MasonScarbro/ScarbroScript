@@ -8,9 +8,10 @@ using System.Collections.Generic;
 namespace ScarbroScript
 {
 
-	abstract class Expr
+	public abstract class Expr
 	{
-		public interface Visitor<T>
+
+		public interface IVisitor<T>
 		{
 			T VisitBinaryExpr(Binary expr);
 			T VisitGroupingExpr(Grouping expr);
@@ -26,7 +27,7 @@ namespace ScarbroScript
 				this.right = right;
 			}
 
-			public override T Accept<T>(Visitor<T> visitor)
+			public override T Accept<T>(IVisitor<T> visitor)
 			{
 				return visitor.VisitBinaryExpr(this);
 
@@ -43,7 +44,7 @@ namespace ScarbroScript
 				this.expression = expression;
 			}
 
-			public override T Accept<T>(Visitor<T> visitor)
+			public override T Accept<T>(IVisitor<T> visitor)
 			{
 				return visitor.VisitGroupingExpr(this);
 
@@ -58,7 +59,7 @@ namespace ScarbroScript
 				this.value = value;
 			}
 
-            public override T Accept<T>(Visitor<T> visitor)
+            public override T Accept<T>(IVisitor<T> visitor)
 			{
 				return visitor.VisitLiteralExpr(this);
 
@@ -74,7 +75,7 @@ namespace ScarbroScript
 				this.right = right;
 			}
 
-			public override T Accept<T>(Visitor<T> visitor)
+			public override T Accept<T>(IVisitor<T> visitor)
 			{
 				return visitor.VisitUnaryExpr(this);
 
@@ -84,7 +85,7 @@ namespace ScarbroScript
 			public readonly Expr right;
 		}
 
-		public abstract T Accept<T>(Visitor<T> visitor);
+		public abstract T Accept<T>(IVisitor<T> visitor);
 
 
 	}

@@ -9,12 +9,12 @@ using System.Threading.Tasks;
  */
 namespace ScarbroScript
 {
-    public class Token
+    public struct Token
     {
-        readonly TokenType type;
-        readonly String lexeme;
-        readonly Object literal;
-        readonly int line;
+        public readonly TokenType type;
+        public readonly String lexeme;
+        public readonly Object literal;
+        public readonly int line;
 
         public Token(TokenType type, string lexeme, object literal, int line)
         {
@@ -28,5 +28,11 @@ namespace ScarbroScript
         {
             return type + " " + lexeme + " " + literal;
         }
+
+        public TokenType GetTokenType()
+        {
+            return this.type;
+        }
+        
     }
 }

@@ -48,7 +48,7 @@ namespace ScarbroScript
 
                 for (; ; ) // Infinite Loop
                 {
-                    Console.WriteLine("> ");
+                    Console.Write("> ");
                     String line = reader.ReadLine();
                     if (line == null) break;
                     Run(line);
@@ -62,8 +62,22 @@ namespace ScarbroScript
         //prints out the tokens the scanner emits!
         private static void Run(String source)
         {
-            Scanner scanner = new Scanner(source); //Our own scanner not the built in one (for Java)
-            List<Token> tokens = scanner.ScanTokens();
+            try
+            {
+                Scanner scanner = new Scanner(source); //Our own scanner not the built in one (for Java)
+                List<Token> tokens = scanner.ScanTokens();
+                Parser parser = new Parser(tokens);
+                Expr expression = parser.Parse();
+
+                if (hadError) return;
+
+                Console.WriteLine(new AstPrinter().Print(expression));
+
+            } catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+           
 
         }
 
@@ -76,6 +90,18 @@ namespace ScarbroScript
         {
             Console.WriteLine("[line " + line + "] Error" + where + ": " + message);
             hadError = true;
+        }
+
+        public static void Error(Token token, String message)
+        {
+            if (token.type == TokenType.EOF)
+            {
+                report(token.line, " at end", message);
+            }
+            else
+            {
+                report(token.line, " at '" + token.lexeme + "'", message);
+            }
         }
     }
 }

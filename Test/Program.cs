@@ -4,7 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScarbroScript
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test
 {
     class Scanner
     {
@@ -39,7 +45,7 @@ namespace ScarbroScript
         public Scanner(string source)
         {
             this.source = source;
- 
+
         }
 
         /**
@@ -48,8 +54,9 @@ namespace ScarbroScript
          * That isn’t strictly needed, but it makes our parser a little cleaner.
          */
         public List<Token> ScanTokens()
-        {   
-            while (!IsAtEnd()) {
+        {
+            while (!IsAtEnd())
+            {
                 // We are at the beginning of the next Lexeme
                 start = current;
                 ScanToken();
@@ -57,14 +64,14 @@ namespace ScarbroScript
 
             tokens.Add(new Token(TokenType.EOF, "", null, line));
             return tokens;
-            
-            
+
+
         }
 
         //Recognizing Lexemes
         private void ScanToken()
         {
-            
+
             char c = Advance();
             Console.WriteLine($"Scanning character: {c}, Line: {line}, Current Index: {current}");
             switch (c)
@@ -124,16 +131,16 @@ namespace ScarbroScript
                     if (IsDigit(c))
                     {
                         Number();
-                    } 
+                    }
                     else if (IsAlpha(c))
                     {
                         Identifier();
-                    } 
+                    }
                     else
                     {
-                       ScarbroScript.Error(line, "Unexpected Character");
+                        ScarbroScript.Error(line, "Unexpected Character");
                     }
-                    
+
                     break;
 
             }
@@ -170,7 +177,7 @@ namespace ScarbroScript
 
             String text = source.Substring(start, current);
             // tryGetValue for error handling bc dicts cant have nulls like javas Hash maps
-            if (keywords.TryGetValue(text, out TokenType type) == false) 
+            if (keywords.TryGetValue(text, out TokenType type) == false)
             {
                 type = TokenType.IDENTIFIER;
             }
@@ -196,16 +203,14 @@ namespace ScarbroScript
          */
         private void Number()
         {
-            while (IsDigit(Peek())) Advance();
             //Look for the fractional part
             if (Peek() == '.' && IsDigit(PeekNext()))
             {
-                Console.WriteLine("Number() - peek");
                 //consume the decimal
                 Advance();
+
                 while (IsDigit(Peek())) Advance();
             }
-            
             var result = source.Substring(start, current - start);
             Console.WriteLine(result);
             AddToken(TokenType.NUMBER, Double.Parse(result));
@@ -219,7 +224,7 @@ namespace ScarbroScript
             while (Peek() != '"' && !IsAtEnd())
             {
                 if (Peek() == '\n') line++; //handles multiline strings 
-                Advance(); 
+                Advance();
             }
 
             if (IsAtEnd())
@@ -284,11 +289,12 @@ namespace ScarbroScript
         // handles output for literals @Overloaded function
         private void AddToken(TokenType type, Object literal)
         {
-            String text = source.Substring(start, current - start);
+            String text = source.Substring(start, current);
             tokens.Add(new Token(type, text, literal, line));
         }
 
-        
+
 
     }
 }
+

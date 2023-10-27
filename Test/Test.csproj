@@ -4,12 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{431C5F71-7365-4EFE-B983-BC04CBC0D289}</ProjectGuid>
+    <ProjectGuid>{6B0386D9-C1C3-4244-8FCB-6FF10AA99880}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ScarbroScript</RootNamespace>
-    <AssemblyName>ScarbroScript</AssemblyName>
+    <RootNamespace>Test</RootNamespace>
+    <AssemblyName>Test</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-	  <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -44,18 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AstPrinter.cs" />
-    <Compile Include="Parser.cs" />
-    <Compile Include="Expr.cs" />
-    <Compile Include="Scanner.cs" />
-    <Compile Include="Token.cs" />
-    <Compile Include="TokenType.cs" />
-    <Compile Include="ScarbroScript.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
