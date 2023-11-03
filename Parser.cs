@@ -17,7 +17,7 @@ namespace ScarbroScript
         {
             this.tokens = tokens;
         }
-
+        //Kickstarts the parsing
         public Expr Parse()
         {
             try
@@ -29,7 +29,7 @@ namespace ScarbroScript
         }
         private Expr Expression()
         {
-            return Equality();
+            return Equality(); // "kickstarts the descent"
         }
 
         private Expr Equality()

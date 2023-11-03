@@ -4,13 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Test
+namespace ScarbroScript
 {
     class Scanner
     {
@@ -45,7 +39,7 @@ namespace Test
         public Scanner(string source)
         {
             this.source = source;
-
+ 
         }
 
         /**
@@ -54,9 +48,8 @@ namespace Test
          * That isn’t strictly needed, but it makes our parser a little cleaner.
          */
         public List<Token> ScanTokens()
-        {
-            while (!IsAtEnd())
-            {
+        {   
+            while (!IsAtEnd()) {
                 // We are at the beginning of the next Lexeme
                 start = current;
                 ScanToken();
@@ -64,14 +57,14 @@ namespace Test
 
             tokens.Add(new Token(TokenType.EOF, "", null, line));
             return tokens;
-
-
+            
+            
         }
 
         //Recognizing Lexemes
         private void ScanToken()
         {
-
+            
             char c = Advance();
             Console.WriteLine($"Scanning character: {c}, Line: {line}, Current Index: {current}");
             switch (c)
@@ -131,16 +124,16 @@ namespace Test
                     if (IsDigit(c))
                     {
                         Number();
-                    }
+                    } 
                     else if (IsAlpha(c))
                     {
                         Identifier();
-                    }
+                    } 
                     else
                     {
-                        ScarbroScript.Error(line, "Unexpected Character");
+                       ScarbroScript.Error(line, "Unexpected Character");
                     }
-
+                    
                     break;
 
             }
@@ -177,7 +170,7 @@ namespace Test
 
             String text = source.Substring(start, current);
             // tryGetValue for error handling bc dicts cant have nulls like javas Hash maps
-            if (keywords.TryGetValue(text, out TokenType type) == false)
+            if (keywords.TryGetValue(text, out TokenType type) == false) 
             {
                 type = TokenType.IDENTIFIER;
             }
@@ -203,14 +196,16 @@ namespace Test
          */
         private void Number()
         {
+            while (IsDigit(Peek())) Advance();
             //Look for the fractional part
             if (Peek() == '.' && IsDigit(PeekNext()))
             {
+                Console.WriteLine("Number() - peek");
                 //consume the decimal
                 Advance();
-
                 while (IsDigit(Peek())) Advance();
             }
+            
             var result = source.Substring(start, current - start);
             Console.WriteLine(result);
             AddToken(TokenType.NUMBER, Double.Parse(result));
@@ -224,7 +219,7 @@ namespace Test
             while (Peek() != '"' && !IsAtEnd())
             {
                 if (Peek() == '\n') line++; //handles multiline strings 
-                Advance();
+                Advance(); 
             }
 
             if (IsAtEnd())
@@ -238,7 +233,7 @@ namespace Test
             //just trims the qoutes for the Token, strings when outputted to console dont come with "
             Console.WriteLine("Current = " + current);
             Console.WriteLine("Substring = " + source.Substring(start + 1, current - start - 2));
-            String value = source.Substring(start + 1, current - 1);
+            String value = source.Substring(start + 1, current - start - 2);
             AddToken(TokenType.STRING, value);
         }
 
@@ -289,12 +284,11 @@ namespace Test
         // handles output for literals @Overloaded function
         private void AddToken(TokenType type, Object literal)
         {
-            String text = source.Substring(start, current);
+            String text = source.Substring(start, current - start);
             tokens.Add(new Token(type, text, literal, line));
         }
 
-
+        
 
     }
 }
-

@@ -9,7 +9,9 @@ namespace ScarbroScript
 {
     public class ScarbroScript
     {
+        private static readonly Interpreter interpreter = new Interpreter();
         static bool hadError = false;
+        static bool hadRuntimeError = false;
         public static void Main(string[] args)
         {
             if (args.Length > 1)
@@ -34,6 +36,7 @@ namespace ScarbroScript
                 String SourceAsBytes = Encoding.Default.GetString(bytes);
                 Run(SourceAsBytes);
                 if (hadError) Environment.Exit(65);
+                if (hadRuntimeError) Environment.Exit(70);
             } catch (IOException)
             {
 
@@ -71,7 +74,8 @@ namespace ScarbroScript
 
                 if (hadError) return;
 
-                Console.WriteLine(new AstPrinter().Print(expression));
+                interpreter.Interpret(expression);
+                //Console.WriteLine(new AstPrinter().Print(expression));
 
             } catch (Exception ex)
             {
@@ -102,6 +106,12 @@ namespace ScarbroScript
             {
                 report(token.line, " at '" + token.lexeme + "'", message);
             }
+        }
+
+        public static void RuntimeErrorToCons(RuntimeError error)
+        {
+            Console.Error.WriteLine(error.ToString() + "\n[line " + error.token.line + "]");
+            hadRuntimeError = true;
         }
     }
 }

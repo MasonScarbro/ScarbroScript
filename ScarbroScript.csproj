@@ -9,7 +9,7 @@
     <RootNamespace>ScarbroScript</RootNamespace>
     <AssemblyName>ScarbroScript</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-	  <LangVersion>8.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AstPrinter.cs" />
+    <Compile Include="RuntimeError.cs" />
+    <Compile Include="Interpreter.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Expr.cs" />
     <Compile Include="Scanner.cs" />
