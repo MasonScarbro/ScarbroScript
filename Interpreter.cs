@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace ScarbroScript
 {
-    public class Interpreter : Expr.IVisitor<Object>
+    public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<object>
     {
 
-        public void Interpret(Expr expression)
+        public void Interpret(List<Stmt> statements)
         {
             try
             {
-                Object value = Evaluate(expression);
-                Console.WriteLine(Stringify(value));
+                foreach (Stmt statement in statements)
+                {
+                    Execute(statement);
+                }
             } catch (RuntimeError error)
             {
                 ScarbroScript.RuntimeErrorToCons(error);
@@ -95,7 +97,13 @@ namespace ScarbroScript
                     CheckNumberOperands(expr.oper, left, right);//err
                     return (double)left - (double)right;
                 case TokenType.SLASH:
+
                     CheckNumberOperands(expr.oper, left, right);
+                    //Checks if dividing by zero
+                    if ((double)right == 0)
+                    {
+                        throw new RuntimeError(expr.oper, "This isnt math class... But you cant divide by zero unless you are taking the limit as an interger n aproaches 0 which would be infinity!");
+                    }
                     return (double)left / (double)right;
                 case TokenType.STAR:
                     CheckNumberOperands(expr.oper, left, right);
@@ -111,11 +119,11 @@ namespace ScarbroScript
                         return (string)left + (string)right;
                     }
                     //String Concatenation!
-                    if (left.GetType() == typeof(String) && right.GetType() == typeof(Double))
+                    if ((left.GetType() == typeof(String) && right.GetType() == typeof(Double)) || (right.GetType() == typeof(Double) && left.GetType() == typeof(String)))
                     {
                         return (string)left + (string)right.ToString();
                     }
-                    throw new RuntimeError(expr.oper, "POOOOP");
+                    throw new RuntimeError(expr.oper, "Make sure that both operators are either a double or string (Remember string concatnation is allowed)!");
                     break;
                 case TokenType.BANG_EQUAL:
                     return !IsEqual(left, right);
@@ -155,6 +163,26 @@ namespace ScarbroScript
             return expr.Accept(this);
         }
 
+        private void Execute(Stmt stmt)
+        {
+            stmt.Accept(this);
+        }
+
+        // STATEMENT INTERPRETING PART //
+
+        public object VisitExpressionStmt(Stmt.Expression stmt)
+        {
+            Evaluate(stmt.expression);
+            return null;
+        }
+
+        public object VisitPrintStmt(Stmt.Print stmt)
+        {
+            Object value = Evaluate(stmt.expression);
+            Console.WriteLine(Stringify(value)); // Write what they wrote 
+            return null;
+        }
+
         private bool IsTruthy(Object obj)
         {
             if (obj == null) return false;
@@ -162,6 +190,7 @@ namespace ScarbroScript
             //else
             return true;
         }
+
 
         
     }

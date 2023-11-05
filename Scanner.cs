@@ -168,7 +168,7 @@ namespace ScarbroScript
         {
             while (IsAlphaNumeric(Peek())) Advance();
 
-            String text = source.Substring(start, current);
+            String text = source.Substring(start, current - start);
             // tryGetValue for error handling bc dicts cant have nulls like javas Hash maps
             if (keywords.TryGetValue(text, out TokenType type) == false) 
             {

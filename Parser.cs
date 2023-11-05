@@ -17,16 +17,45 @@ namespace ScarbroScript
         {
             this.tokens = tokens;
         }
-        //Kickstarts the parsing
-        public Expr Parse()
+        //Kickstarts the parsing, parses as many statements until EOI/EOF
+        public List<Stmt> Parse()
         {
-            try
+            List<Stmt> statements = new List<Stmt>();
+            while (!IsAtEnd())
             {
-                return Expression();
-            } catch (ParseError err) {
-                return null;
+                statements.Add(Statement());
             }
+
+            return statements;
         }
+
+        private Stmt Statement()
+        {
+            // if token is a print its obviously of the statement type Print
+            if (Match(TokenType.PRINT)) return PrintStatement();
+            //else
+            return ExpressionStatement();
+        }
+
+        /// <summary>
+        /// Just like the rest of the descent parse we "start descent"
+        /// to figure out the value of whats after the print 
+        /// </summary>
+        /// <returns> a New Stmt syntax node of Type print</returns>
+        private Stmt PrintStatement()
+        {
+            Expr value = Expression(); 
+            Consume(TokenType.SEMICOLON, "Expected a semicolon after value");
+            return new Stmt.Print(value);
+        }
+
+        private Stmt ExpressionStatement()
+        {
+            Expr expr = Expression();
+            Consume(TokenType.SEMICOLON, "Expected a semicolon after value");
+            return new Stmt.Expression(expr);
+        }
+
         private Expr Expression()
         {
             return Equality(); // "kickstarts the descent"
@@ -147,6 +176,14 @@ namespace ScarbroScript
             return false;
         }
 
+        /// <summary>
+        /// Basically the check function but also has error handeling
+        /// checks the next token and advances unless its at EOF (part of the Advance func)
+        /// otherwise it throws an error for the user with the given param message
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="message"></param>
+        /// <returns> Advance() which returns Token </returns>        
         private Token Consume(TokenType type, String message)
         {
             if (Check(type)) return Advance();
