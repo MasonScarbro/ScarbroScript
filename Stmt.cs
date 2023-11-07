@@ -9,6 +9,9 @@ namespace ScarbroScript
 		{
 			T VisitExpressionStmt(Expression stmt);
 			T VisitPrintStmt(Print stmt);
+			T VisitVarStmt(Var stmt);
+
+			T VisitBlockStmt(Block stmt);
 		}
 		public class Expression : Stmt
 		{
@@ -39,6 +42,40 @@ namespace ScarbroScript
 			}
 
 			public readonly Expr expression;
+		}
+		public class Var : Stmt
+		{
+			public Var(Token name, Expr initializer) 
+			{
+				this.name = name;
+				this.initializer = initializer;
+			}
+
+			public override T Accept<T>(IVisitor<T> visitor) 
+			{
+				return visitor.VisitVarStmt(this);
+
+			}
+
+			public readonly Token name;
+			public readonly Expr initializer;
+		}
+
+		public class Block : Stmt
+		{
+			public Block(List<Stmt> statements)
+			{
+				this.statements = statements;
+			}
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitBlockStmt(this);
+
+			}
+
+			public readonly List<Stmt> statements;
+			
 		}
 
 		public abstract T Accept<T>(IVisitor<T> visitor);

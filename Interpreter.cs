@@ -8,7 +8,7 @@ namespace ScarbroScript
 {
     public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<object>
     {
-
+        private Enviornment enviornment = new Enviornment();
         public void Interpret(List<Stmt> statements)
         {
             try
@@ -22,6 +22,9 @@ namespace ScarbroScript
                 ScarbroScript.RuntimeErrorToCons(error);
             }
         }
+
+        
+        
 
         /// <summary>
         /// The parser took the value and stuck it in the literal tree node,
@@ -168,6 +171,35 @@ namespace ScarbroScript
             stmt.Accept(this);
         }
 
+        /// <summary>
+        /// The this statements can seem a little confusing but dont let them fool you
+        /// it does exactly what you think an interpreter would do with blocks
+        /// first to execute the code within the "scope" (the block)
+        /// It updates the interpreters global enviornment to the passed in enviornment 
+        /// runs through each of those statments and executes them then using the 
+        /// finally block it restores the enviornment to the old one!
+        /// </summary>
+        /// <param name="statements"></param>
+        /// <param name="enviornment"></param>
+        public void ExecuteBlock(List<Stmt> statements, Enviornment enviornment)
+        {
+            Enviornment previous = this.enviornment;
+            try
+            {
+                this.enviornment = enviornment;
+
+                foreach (Stmt statement in statements)
+                {
+                    Execute(statement);
+                }
+            }
+            finally
+            {
+                this.enviornment = previous;
+            }
+            
+        }
+
         // STATEMENT INTERPRETING PART //
 
         public object VisitExpressionStmt(Stmt.Expression stmt)
@@ -182,6 +214,39 @@ namespace ScarbroScript
             Console.WriteLine(Stringify(value)); // Write what they wrote 
             return null;
         }
+
+        public object VisitVarStmt(Stmt.Var stmt)
+        {
+            //just sets it to null if no initilizlizer is given
+            Object value = null;
+            if (stmt.initializer != null)
+            {
+                value = Evaluate(stmt.initializer);
+            }
+
+            enviornment.Define(stmt.name.lexeme, value);
+            return null;
+        }
+
+        public Object VisitAssignExpr(Expr.Assign expr)
+        {
+            Object value = Evaluate(expr.value);
+            enviornment.Assign(expr.name, value);
+            return value;
+        }
+
+        public Object VisitVariableExpr(Expr.Variable expr)
+        {
+            return enviornment.Get(expr.name);
+        }
+
+        public object VisitBlockStmt(Stmt.Block stmt)
+        {
+            ExecuteBlock(stmt.statements, new Enviornment(enviornment));
+            return null;
+        }
+
+        // END STATEMENT INTERPRETING PART //
 
         private bool IsTruthy(Object obj)
         {

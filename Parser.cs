@@ -23,7 +23,7 @@ namespace ScarbroScript
             List<Stmt> statements = new List<Stmt>();
             while (!IsAtEnd())
             {
-                statements.Add(Statement());
+                statements.Add(Declaration());
             }
 
             return statements;
@@ -33,6 +33,7 @@ namespace ScarbroScript
         {
             // if token is a print its obviously of the statement type Print
             if (Match(TokenType.PRINT)) return PrintStatement();
+            if (Match(TokenType.LEFT_BRACE)) return new Stmt.Block(Block());
             //else
             return ExpressionStatement();
         }
@@ -56,9 +57,71 @@ namespace ScarbroScript
             return new Stmt.Expression(expr);
         }
 
+        private List<Stmt> Block()
+        {
+            List<Stmt> statements = new List<Stmt>();
+
+            while (!Check(TokenType.RIGHT_BRACE) && !IsAtEnd())
+            {
+                statements.Add(Declaration());
+            }
+            Console.WriteLine(tokens.ToString());
+            Consume(TokenType.RIGHT_BRACE, "Expected a '}' after block");
+            return statements;
+        }
+
         private Expr Expression()
         {
-            return Equality(); // "kickstarts the descent"
+            return Assignment(); // "kickstarts" the descent
+        }
+
+        private Expr Assignment()
+        {
+            Expr expr = Equality();
+
+            if (Match(TokenType.EQUAL))
+            {
+                Token equals = Previous();
+                Expr value = Assignment();
+
+                if (expr.GetType() == typeof(Expr.Variable))
+                {
+                    Token name = ((Expr.Variable)expr).name;
+                    return new Expr.Assign(name, value);
+                }
+                Error(equals, "Invalid Assignment Target");
+            }
+
+            return expr;
+
+        }
+
+        private Stmt Declaration()
+        {
+            try
+            {
+                if (Match(TokenType.VAR)) return VarDeclaration();
+
+                return Statement();
+            } catch (ParseError)
+            {
+                Synchronize();
+                return null;
+            }
+        }
+
+        private Stmt VarDeclaration()
+        {
+            Token name = Consume(TokenType.IDENTIFIER, "Expected Variable name ");
+
+            Expr intializer = null;
+            if (Match(TokenType.EQUAL))
+            {
+                intializer = Expression();
+            }
+
+            Consume(TokenType.SEMICOLON, "Expected ';' after your variable declaration");
+            return new Stmt.Var(name, intializer);
         }
 
         private Expr Equality()
@@ -142,6 +205,11 @@ namespace ScarbroScript
             if (Match(TokenType.NUMBER, TokenType.STRING))
             {
                 return new Expr.Literal(Previous().literal);
+            }
+
+            if (Match(TokenType.IDENTIFIER))
+            {
+                return new Expr.Variable(Previous());
             }
 
             if (Match(TokenType.LEFT_PAREN))
