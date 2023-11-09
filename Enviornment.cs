@@ -37,6 +37,7 @@ namespace ScarbroScript
         public void Define(String name, Object value)
         {
             //Adds the variable name and its associated value to the mappings of Vars!
+            Console.WriteLine(values);
             values.Add(name, value);
         }
 
@@ -51,6 +52,13 @@ namespace ScarbroScript
                 //Also this ^^^ looks a little hackeed but no put function so whatta gonna dd 
                 return;
             }
+
+            if (enclosing != null)
+            {
+                enclosing.Assign(name, value);
+                return;
+            }
+
             throw new RuntimeError(name, "Undefined variable " + name.lexeme);
         }
 

@@ -8,7 +8,20 @@ namespace ScarbroScript
 {
     public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<object>
     {
-        private Enviornment enviornment = new Enviornment();
+        private class BreakException : Exception { };
+
+        public static readonly Enviornment globals = new Enviornment();
+        private Enviornment enviornment;
+
+
+        public Interpreter()
+        {
+            globals.Define("clock", new Clock());
+            enviornment = globals;
+        }
+
+
+
         public void Interpret(List<Stmt> statements)
         {
             try
@@ -23,7 +36,7 @@ namespace ScarbroScript
             }
         }
 
-        
+       
         
 
         /// <summary>
@@ -168,6 +181,7 @@ namespace ScarbroScript
 
         private void Execute(Stmt stmt)
         {
+            Console.WriteLine("Executing statement: " + stmt);
             stmt.Accept(this);
         }
 
@@ -231,6 +245,7 @@ namespace ScarbroScript
         public Object VisitAssignExpr(Expr.Assign expr)
         {
             Object value = Evaluate(expr.value);
+            Console.WriteLine($"Assigned variable {expr.name.lexeme} with value: {value}");
             enviornment.Assign(expr.name, value);
             return value;
         }
@@ -242,12 +257,102 @@ namespace ScarbroScript
 
         public object VisitBlockStmt(Stmt.Block stmt)
         {
+            Console.WriteLine("Entering a new environment...");
             ExecuteBlock(stmt.statements, new Enviornment(enviornment));
+            Console.WriteLine("Exiting the environment...");
             return null;
+        }
+
+        public object VisitIfStmt(Stmt.If stmt)
+        {
+            if (IsTruthy(Evaluate(stmt.condition)))
+            {
+                Execute(stmt.thenBranch);
+            }
+            else
+            {
+                Execute(stmt.elseBranch);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Remmeber that this is dynamically typed
+        /// and pay attention to the nested if's
+        /// So this evals left and checks if the oper is an or
+        /// if it is than it checks left is truth if is than return
+        /// if not it breaks and evals right
+        /// </summary>
+        /// <param name="expr"></param>
+        /// <returns></returns>
+        public object VisitLogicalExpr(Expr.Logical expr)
+        {
+            Object left = Evaluate(expr.left);
+
+            
+            if (expr.oper.type == TokenType.OR)
+            {
+                if (IsTruthy(left)) return left;
+            }
+            else
+            {
+                if (!IsTruthy(left)) return left;
+            }
+
+            return Evaluate(expr.right);
+        }
+
+        public object VisitWhileStmt(Stmt.While stmt)
+        {
+            try
+            {
+                while (IsTruthy(Evaluate(stmt.condition)))
+                {
+                    Execute(stmt.body);
+                }
+
+            } catch (BreakException)
+            {
+                //Breaks out of the loop, Not very pretty but it works
+            }
+            
+            return null;
+        }
+
+        public object VisitBreakStmt(Stmt.Break stmt)
+        {
+            Console.WriteLine("Encountered a break statement");
+            throw new BreakException();
         }
 
         // END STATEMENT INTERPRETING PART //
 
+        // FUNCTION INTERPRETING //
+
+        public Object VisitCallExpr(Expr.Call expr)
+        {
+            Object callee = Evaluate(expr.callee);
+
+            List<Object> arguments = new List<Object>();
+            foreach (Expr argument in arguments)
+            {
+                arguments.Add(Evaluate(argument));
+            }
+
+            if (!(callee.GetType() == typeof(ScarbroScriptCallable))) 
+            {
+                throw new RuntimeError(expr.paren, "Can only call functions and classes.");
+            }
+
+           
+
+            ScarbroScriptCallable function = (ScarbroScriptCallable)callee;
+            if (arguments.Count != function.Arity())
+            {
+                throw new RuntimeError(expr.paren, "Expected " + function.Arity() + " Args but got " + arguments.Count);
+            }
+            return function.Call(this, arguments);
+        }
         private bool IsTruthy(Object obj)
         {
             if (obj == null) return false;

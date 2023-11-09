@@ -12,6 +12,7 @@ namespace ScarbroScript
 
         private readonly List<Token> tokens;
         private int current = 0;
+        private int loopDepth = 0;
 
         public Parser(List<Token> tokens)
         {
@@ -31,11 +32,112 @@ namespace ScarbroScript
 
         private Stmt Statement()
         {
+            Console.WriteLine("Parsing Statement...");
+            if (Match(TokenType.FOR)) return ForStatement();
+            if (Match(TokenType.IF)) return IfStatement();
+
+            if (Match(TokenType.BREAK)) return BreakStatement();
             // if token is a print its obviously of the statement type Print
             if (Match(TokenType.PRINT)) return PrintStatement();
+            if (Match(TokenType.WHILE)) return WhileStatement();
             if (Match(TokenType.LEFT_BRACE)) return new Stmt.Block(Block());
             //else
             return ExpressionStatement();
+        }
+
+
+        private Stmt BreakStatement()
+        {
+            // checks if its inside a loop
+            if (IsInsideLoop())
+            {
+                Consume(TokenType.SEMICOLON, "Expected a semicolon after break statement");
+                return new Stmt.Break();
+            } else
+            {
+                Error(Previous(), "Break statement is only valid inside a loop.");
+                return null;
+            }
+        }
+
+
+        private Stmt ForStatement()
+        {
+            Consume(TokenType.LEFT_PAREN, "Expected a '(' after and if");
+            loopDepth++;
+            Stmt initializer;
+            if (Match(TokenType.SEMICOLON))
+            {
+                initializer = null;
+            }
+            else if (Match(TokenType.VAR))
+            {
+                initializer = VarDeclaration();
+            }
+            else
+            {
+                initializer = ExpressionStatement();
+            }
+
+            Expr condition = null;
+            if (!Check(TokenType.SEMICOLON))
+            {
+                condition = Expression();
+            }
+            Consume(TokenType.SEMICOLON, "Expected a ';' after loop condition");
+
+            Expr increment = null;
+            if (Check(TokenType.RIGHT_PAREN))
+            {
+                increment = Expression();
+            }
+            Consume(TokenType.RIGHT_PAREN, "Expected a ')' after clause");
+            Stmt body = Statement();
+
+            /**
+             * The increment, if there is one, 
+             * executes after the body in each iteration of the loop.
+             * We do that by replacing the body with a little block 
+             * that contains the original body followed by an expression
+             * statement that evaluates the increment.
+             */
+            if (increment != null)
+            {
+                List<Stmt> stmts = new List<Stmt>();
+                stmts.Add(body);
+                stmts.Add(new Stmt.Expression(increment));
+
+                body = new Stmt.Block(stmts);
+            }
+
+            if (condition == null) condition = new Expr.Literal(true);
+            //else
+            body = new Stmt.While(condition, body);
+
+            if (initializer != null)
+            {
+                List<Stmt> stmts = new List<Stmt>();
+                stmts.Add(initializer);
+                stmts.Add(body);
+                body = new Stmt.Block(stmts);
+            }
+            return body;
+        }
+
+        private Stmt IfStatement()
+        {
+            Consume(TokenType.LEFT_PAREN, "Expected a '(' after and if");
+            Expr condition = Expression();
+            Consume(TokenType.RIGHT_PAREN, "Expected a ')' after and if condition starting brace '('");
+
+            Stmt thenBranch = Statement();
+            Stmt elseBranch = null;
+            if (Match(TokenType.ELSE))
+            {
+                elseBranch = Statement();
+            }
+
+            return new Stmt.If(condition, thenBranch, elseBranch);
         }
 
         /// <summary>
@@ -45,10 +147,39 @@ namespace ScarbroScript
         /// <returns> a New Stmt syntax node of Type print</returns>
         private Stmt PrintStatement()
         {
-            Expr value = Expression(); 
+            Expr value = Expression();
             Consume(TokenType.SEMICOLON, "Expected a semicolon after value");
             return new Stmt.Print(value);
         }
+
+        private Stmt WhileStatement()
+        {
+            try
+            {
+                Console.WriteLine("Entering While Loop... (Parse)");
+
+                Consume(TokenType.LEFT_PAREN, "Expected a '(' after and if");
+                Expr condition = Expression();
+                Consume(TokenType.RIGHT_PAREN, "Expected a ')' after and if condition starting brace '('");
+
+                //Increments loopDepth to indicate if we are in a loop
+                loopDepth++;
+                Console.WriteLine("Loop Depth: " + loopDepth);
+
+
+                Stmt body = Statement();
+
+                return new Stmt.While(condition, body);
+            }
+            finally
+            {
+                Console.WriteLine("Exiting While Loop... (Parse)");
+                loopDepth--;
+                Console.WriteLine("Loop Depth: " + loopDepth);
+            }
+
+        }
+
 
         private Stmt ExpressionStatement()
         {
@@ -59,14 +190,17 @@ namespace ScarbroScript
 
         private List<Stmt> Block()
         {
+            Console.WriteLine("Parsing Block...");
             List<Stmt> statements = new List<Stmt>();
 
             while (!Check(TokenType.RIGHT_BRACE) && !IsAtEnd())
             {
+
                 statements.Add(Declaration());
             }
             Console.WriteLine(tokens.ToString());
             Consume(TokenType.RIGHT_BRACE, "Expected a '}' after block");
+
             return statements;
         }
 
@@ -77,7 +211,7 @@ namespace ScarbroScript
 
         private Expr Assignment()
         {
-            Expr expr = Equality();
+            Expr expr = Or();
 
             if (Match(TokenType.EQUAL))
             {
@@ -94,6 +228,33 @@ namespace ScarbroScript
 
             return expr;
 
+        }
+
+        private Expr Or()
+        {
+            Expr expr = And();
+
+            while (Match(TokenType.OR))
+            {
+                Token oper = Previous();
+                Expr right = And();
+                expr = new Expr.Logical(expr, oper, right);
+            }
+
+            return expr;
+        }
+
+        private Expr And()
+        {
+            Expr expr = Equality();
+
+            while (Match(TokenType.AND))
+            {
+                Token oper = Previous();
+                Expr right = Equality();
+                expr = new Expr.Logical(expr, oper, right);
+            }
+            return expr;
         }
 
         private Stmt Declaration()
@@ -193,7 +354,44 @@ namespace ScarbroScript
                 return new Expr.Unary(oper, right);
             }
 
-            return Primary();
+            return Call();
+        }
+
+        private Expr Call()
+        {
+            Expr expr = Primary();
+
+            while (true)
+            {
+                if (Match(TokenType.LEFT_PAREN))
+                {
+                    expr = ParseArgumentsAndFinishCallParse(expr);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return expr;
+        }
+
+        private Expr ParseArgumentsAndFinishCallParse(Expr expr)
+        {
+            List<Expr> arguments = new List<Expr>();
+            // checks for no arguments!
+            if (!Check(TokenType.RIGHT_PAREN))
+            {
+                do
+                {
+                    arguments.Add(Expression());
+
+                } while (Match(TokenType.COMMA));
+
+            }
+            Token paren = Consume(TokenType.RIGHT_PAREN, "Expected ')' After arguments");
+
+            return new Expr.Call(callee, paren, arguments);
         }
 
         private Expr Primary()
@@ -229,7 +427,7 @@ namespace ScarbroScript
          * Otherwise, it returns false and leaves the current token alone.
          * 
          */
-        private bool Match(params TokenType[] types)
+            private bool Match(params TokenType[] types)
         {
             foreach (TokenType type in types)
             {
@@ -318,6 +516,20 @@ namespace ScarbroScript
         private Token Previous()
         {
             return tokens[current - 1];
+        }
+
+      
+
+        private bool IsInsideLoop()
+        {
+            if (loopDepth <= 0)
+            {
+                Error(Previous(), "Break Statement not in loop");
+            }
+            //else
+            return true;
+            
+            
         }
     }
 }

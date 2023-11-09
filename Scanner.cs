@@ -26,6 +26,7 @@ namespace ScarbroScript
             { "this", TokenType.THIS },
             { "true", TokenType.TRUE },
             { "var", TokenType.VAR },
+            { "break", TokenType.BREAK },
             { "while", TokenType.WHILE }
         };
 
