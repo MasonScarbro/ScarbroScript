@@ -174,16 +174,7 @@ namespace ScarbroScript
             return obj.ToString();
         }
 
-        private Object Evaluate(Expr expr)
-        {
-            return expr.Accept(this);
-        }
-
-        private void Execute(Stmt stmt)
-        {
-            Console.WriteLine("Executing statement: " + stmt);
-            stmt.Accept(this);
-        }
+        
 
         /// <summary>
         /// The this statements can seem a little confusing but dont let them fool you
@@ -334,12 +325,12 @@ namespace ScarbroScript
             Object callee = Evaluate(expr.callee);
 
             List<Object> arguments = new List<Object>();
-            foreach (Expr argument in arguments)
+            foreach (Expr argument in expr.arguments)
             {
                 arguments.Add(Evaluate(argument));
             }
-
-            if (!(callee.GetType() == typeof(ScarbroScriptCallable))) 
+            Console.WriteLine(callee.GetType());
+            if (!(callee is ScarbroScriptCallable)) 
             {
                 throw new RuntimeError(expr.paren, "Can only call functions and classes.");
             }
@@ -347,12 +338,32 @@ namespace ScarbroScript
            
 
             ScarbroScriptCallable function = (ScarbroScriptCallable)callee;
-            if (arguments.Count != function.Arity())
+            if (arguments.Count != function.Arity)
             {
-                throw new RuntimeError(expr.paren, "Expected " + function.Arity() + " Args but got " + arguments.Count);
+                throw new RuntimeError(expr.paren, "Expected " + function.Arity + " Args but got " + arguments.Count);
             }
             return function.Call(this, arguments);
         }
+
+        public object VisitFunctionStmt(Stmt.Function stmt)
+        {
+            ScarbroScriptFunction function = new ScarbroScriptFunction(stmt , enviornment);
+            enviornment.Define(stmt.name.lexeme, function);
+            return null;
+        }
+
+        public object VisitReturnStmt(Stmt.Return stmt)
+        {
+            Object value = null;
+            if (stmt.value != null) value = Evaluate(stmt.value);
+            // Just like the break Stmt! we basically
+            // catch an exception to exit out of the block
+            // or more rather the visitfunction here!
+            throw new Return(value); 
+        }
+
+        // END FUNCTION INTERPRETING //
+
         private bool IsTruthy(Object obj)
         {
             if (obj == null) return false;
@@ -361,7 +372,16 @@ namespace ScarbroScript
             return true;
         }
 
+        private Object Evaluate(Expr expr)
+        {
+            return expr.Accept(this);
+        }
 
-        
+        private void Execute(Stmt stmt)
+        {
+            Console.WriteLine("Executing statement: " + stmt);
+            stmt.Accept(this);
+        }
+
     }
 }

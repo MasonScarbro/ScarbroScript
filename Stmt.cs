@@ -15,6 +15,10 @@ namespace ScarbroScript
 			T VisitWhileStmt(While stmt);
 
 			T VisitBreakStmt(Break stmt);
+
+			T VisitFunctionStmt(Function stmt);
+
+			T VisitReturnStmt(Return stmt);
 		}
 		public class Block : Stmt
 		{
@@ -133,6 +137,49 @@ namespace ScarbroScript
 
 		
 			
+		}
+
+		public class Function : Stmt
+		{
+			public Function(Token name, List<Token> parameters, List<Stmt> body)
+			{
+
+				this.name = name;
+				this.parameters = parameters;
+				this.body = body;
+			}
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitFunctionStmt(this);
+
+			}
+
+			public readonly Token name;
+			public readonly List<Token> parameters;
+			public readonly List<Stmt> body;
+
+		}
+
+		public class Return : Stmt
+		{
+			public Return(Token keyword, Expr value)
+			{
+
+				this.keyword = keyword;
+				this.value = value;
+				
+			}
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitReturnStmt(this);
+
+			}
+
+			public readonly Token keyword;
+			public readonly Expr value;
+
 		}
 
 		public abstract T Accept<T>(IVisitor<T> visitor);

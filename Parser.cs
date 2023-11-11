@@ -36,6 +36,7 @@ namespace ScarbroScript
             if (Match(TokenType.FOR)) return ForStatement();
             if (Match(TokenType.IF)) return IfStatement();
 
+            if (Match(TokenType.RETURN)) return ReturnStatement();
             if (Match(TokenType.BREAK)) return BreakStatement();
             // if token is a print its obviously of the statement type Print
             if (Match(TokenType.PRINT)) return PrintStatement();
@@ -138,6 +139,20 @@ namespace ScarbroScript
             }
 
             return new Stmt.If(condition, thenBranch, elseBranch);
+        }
+
+
+        private Stmt ReturnStatement()
+        {
+            Token keyword = Previous();
+
+            Expr value = null;
+            if (!(Check(TokenType.SEMICOLON)))
+            {
+                value = Expression();
+            }
+            Consume(TokenType.SEMICOLON, "Expected a semicolon after value");
+            return new Stmt.Return(keyword, value);
         }
 
         /// <summary>
@@ -261,7 +276,9 @@ namespace ScarbroScript
         {
             try
             {
+                if (Match(TokenType.FUN)) return Function("function");
                 if (Match(TokenType.VAR)) return VarDeclaration();
+                
 
                 return Statement();
             } catch (ParseError)
@@ -271,6 +288,27 @@ namespace ScarbroScript
             }
         }
 
+
+        private Stmt.Function Function(String kind)
+        {
+            Token name = Consume(TokenType.IDENTIFIER, "Expected " + kind + "name");
+            Consume(TokenType.LEFT_PAREN, "Expected '(' after a" + kind + " declaration");
+            List<Token> parameters = new List<Token>();
+
+            //Handles Zero params
+            if (!Check(TokenType.RIGHT_PAREN))
+            {
+                do
+                {
+                    parameters.Add(Consume(TokenType.IDENTIFIER, "Parameter name needed in between the parantheses of your function"));
+
+                } while (Match(TokenType.COMMA));
+            }
+            Consume(TokenType.RIGHT_PAREN, "Expected a a')' after the parameters");
+            Consume(TokenType.LEFT_BRACE, "Expected a '{' Before a " + kind + " body");
+            List<Stmt> body = Block();
+            return new Stmt.Function(name, parameters, body);
+        }
         private Stmt VarDeclaration()
         {
             Token name = Consume(TokenType.IDENTIFIER, "Expected Variable name ");
@@ -365,7 +403,7 @@ namespace ScarbroScript
             {
                 if (Match(TokenType.LEFT_PAREN))
                 {
-                    expr = ParseArgumentsAndFinishCallParse(expr);
+                    expr = ParseArgumentsAndFinishCall(expr);
                 }
                 else
                 {
@@ -376,7 +414,7 @@ namespace ScarbroScript
             return expr;
         }
 
-        private Expr ParseArgumentsAndFinishCallParse(Expr expr)
+        private Expr ParseArgumentsAndFinishCall(Expr callee)
         {
             List<Expr> arguments = new List<Expr>();
             // checks for no arguments!
