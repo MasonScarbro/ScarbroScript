@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AstPrinter.cs" />
+    <Compile Include="Resolver.cs" />
     <Compile Include="Return.cs" />
     <Compile Include="ScarbroScriptFunction.cs" />
     <Compile Include="NativeFunctions.cs" />

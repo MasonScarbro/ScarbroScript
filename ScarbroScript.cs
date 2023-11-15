@@ -74,6 +74,9 @@ namespace ScarbroScript
 
                 if (hadError) return;
 
+                Resolver resolver = new Resolver(interpreter);
+                resolver.Resolve(statements);
+
                 interpreter.Interpret(statements);
                 //Console.WriteLine(new AstPrinter().Print(expression));
 

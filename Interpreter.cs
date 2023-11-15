@@ -12,6 +12,7 @@ namespace ScarbroScript
 
         public static readonly Enviornment globals = new Enviornment();
         private Enviornment enviornment;
+        private readonly Dictionary<Expr, int> locals = new Dictionary<Expr, int>();
 
 
         public Interpreter()
@@ -236,14 +237,25 @@ namespace ScarbroScript
         public Object VisitAssignExpr(Expr.Assign expr)
         {
             Object value = Evaluate(expr.value);
-            Console.WriteLine($"Assigned variable {expr.name.lexeme} with value: {value}");
-            enviornment.Assign(expr.name, value);
+            
+
+            var found = locals.TryGetValue(expr, out var distance);
+            if (found)
+            {
+                Console.WriteLine($"Assigned variable {expr.name.lexeme} with value: {value} in scope: {distance}");
+                enviornment.AssignAt(distance, expr.name, value);
+            } 
+            else
+            {
+                globals.Assign(expr.name, value);
+            }
+
             return value;
         }
 
         public Object VisitVariableExpr(Expr.Variable expr)
         {
-            return enviornment.Get(expr.name);
+            return LookUpVariable(expr.name, expr);
         }
 
         public object VisitBlockStmt(Stmt.Block stmt)
@@ -381,6 +393,25 @@ namespace ScarbroScript
         {
             Console.WriteLine("Executing statement: " + stmt);
             stmt.Accept(this);
+        }
+
+        private Object LookUpVariable(Token name, Expr expr)
+        {
+            var wasFound = locals.TryGetValue(expr, out var distance);
+            if (wasFound)
+            {
+                return enviornment.GetAt(distance, name.lexeme);
+            } 
+            else
+            {
+                return globals.Get(name);
+            }
+
+        }
+
+        public void Resolve(Expr expr, int depth)
+        {
+            locals.Add(expr, depth);
         }
 
     }

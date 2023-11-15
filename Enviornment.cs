@@ -34,6 +34,28 @@ namespace ScarbroScript
             throw new RuntimeError(name, "Undefined variable: " + name.lexeme);
         }
 
+        public Object GetAt(int distance, String name)
+        {
+            return Ancestor(distance).values[name];
+        }
+
+        public void AssignAt(int distance, Token name, Object value)
+        {
+            Ancestor(distance).values.Add(name.lexeme, value);
+        }
+        
+        //walks a fixed number (the distance) in order to find the enviornment for the var
+        public Enviornment Ancestor(int distance)
+        {
+            Enviornment enviornment = this;
+            for (int i = 0; i < distance; i++)
+            {
+                enviornment = enviornment.enclosing;
+            }
+
+            return enviornment;
+        }
+
         public void Define(String name, Object value)
         {
             //Adds the variable name and its associated value to the mappings of Vars!
@@ -49,7 +71,7 @@ namespace ScarbroScript
                 //Assigns the variable the new value
                 values.Remove(name.lexeme);
                 values.Add(name.lexeme, value);
-                //Also this ^^^ looks a little hackeed but no put function so whatta gonna dd 
+                //Also this ^^^ looks a little hackneed but no put function so whatta gonna dd 
                 return;
             }
 
