@@ -1,0 +1,21 @@
+#!C:\Users\Admin\source\repos\ScarbroScript\ScarbroScript\bin\Debug\ScarbroScript.exe
+
+// Delete the above shebang line to have the program run properly ^
+fun test(a){
+  while (a < 18){
+    print a;
+    ++a;
+  }
+}
+var a = 9;
+test(a);
+
+var b = a * 8;
+print b;
+//I dont know what else to put
+print "Strings work!";
+
+//string concatnation works too
+
+var c = 4 + "Mason";
+print c;

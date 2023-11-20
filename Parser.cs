@@ -385,7 +385,7 @@ namespace ScarbroScript
 
         private Expr Unary()
         {
-            if (Match(TokenType.BANG, TokenType.MINUS))
+            if (Match(TokenType.BANG, TokenType.MINUS, TokenType.INCREMENT, TokenType.DECREMENT))
             {
                 Token oper = Previous();
                 Expr right = Unary();

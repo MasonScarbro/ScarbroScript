@@ -41,7 +41,7 @@ namespace ScarbroScript
 
         public void AssignAt(int distance, Token name, Object value)
         {
-            Ancestor(distance).values.Add(name.lexeme, value);
+            Ancestor(distance).values[name.lexeme] = value;
         }
         
         //walks a fixed number (the distance) in order to find the enviornment for the var

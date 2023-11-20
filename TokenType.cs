@@ -17,7 +17,7 @@ namespace ScarbroScript
         BANG, BANG_EQUAL,
         EQUAL, EQUAL_EQUAL,
         GREATER, GREATER_EQUAL,
-        LESS, LESS_EQUAL,
+        LESS, LESS_EQUAL, INCREMENT, DECREMENT,
 
         // Literals.
         IDENTIFIER, STRING, NUMBER,

@@ -16,7 +16,7 @@ namespace ScarbroScript
         {
             if (args.Length > 1)
             {
-                Console.WriteLine("Usage: scarbro.exe [script]");
+                Console.WriteLine("Usage: scarbro [script]");
                 Environment.Exit(64);
             } else if (args.Length == 1)
             {

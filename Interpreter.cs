@@ -68,6 +68,13 @@ namespace ScarbroScript
                     return -(double)right;
                 case TokenType.BANG:
                     return !IsTruthy(right);
+                case TokenType.INCREMENT:
+                    HandlePlusIncr(expr, right);
+                    return null;
+                case TokenType.DECREMENT:
+                    HandleMinusIncr(expr, right);
+                    return null;
+
             }
 
             // Unreachable
@@ -136,9 +143,13 @@ namespace ScarbroScript
                         return (string)left + (string)right;
                     }
                     //String Concatenation!
-                    if ((left.GetType() == typeof(String) && right.GetType() == typeof(Double)) || (right.GetType() == typeof(Double) && left.GetType() == typeof(String)))
+                    if ((left is String && right is Double))
                     {
                         return (string)left + (string)right.ToString();
+                    } 
+                    else if ((left is Double) && (right is String))
+                    {
+                        return (string)left.ToString() + (string)right;
                     }
                     throw new RuntimeError(expr.oper, "Make sure that both operators are either a double or string (Remember string concatnation is allowed)!");
                     break;
@@ -375,6 +386,62 @@ namespace ScarbroScript
         }
 
         // END FUNCTION INTERPRETING //
+
+        /// <summary>
+        /// This Is a Helper method that is vey similar to the VisitVarExpr
+        /// This is because it takes in a unary and detirmines if its "right"
+        /// is a variable if it is then we do the same thing (basically) and assign 
+        /// the variable! We add one to the right which is taken from the visitUnary when its evaluated
+        /// and the value is now assigned to the 'right' and associated with its evaluated right + 1
+        /// Kinda funny sounding but its pretty simple actually.
+        /// </summary>
+        /// <param name="expr"></param>
+        /// <param name="right"></param>
+        public void HandlePlusIncr(Expr.Unary expr, Object right)
+        {
+            if (expr.right is Expr.Variable variableExpr)
+            {
+                var variableName = variableExpr.name;
+
+                if (locals.TryGetValue(expr.right, out var distance))
+                {
+                    Console.WriteLine($"Assigned variable {variableName} with value: {right} in scope: {distance}");
+                    enviornment.AssignAt(distance, variableName, (double)right + 1);
+                }
+                else
+                {
+                    globals.Assign(variableExpr.name, (double)right + 1);
+                }
+            }
+            else
+            {
+                throw new RuntimeError(expr.oper, "You Cannot Use the Increment Operator on a non var");
+            }
+            return;
+        }
+
+        public void HandleMinusIncr(Expr.Unary expr, Object right)
+        {
+            if (expr.right is Expr.Variable variableExpr)
+            {
+                var variableName = variableExpr.name;
+
+                if (locals.TryGetValue(expr.right, out var distance))
+                {
+                    Console.WriteLine($"Assigned variable {variableName} with value: {right} in scope: {distance}");
+                    enviornment.AssignAt(distance, variableName, (double)right - 1);
+                }
+                else
+                {
+                    globals.Assign(variableExpr.name, (double)right - 1);
+                }
+            }
+            else
+            {
+                throw new RuntimeError(expr.oper, "You Cannot Use the Increment Operator on a non var");
+            }
+            return;
+        }
 
         private bool IsTruthy(Object obj)
         {

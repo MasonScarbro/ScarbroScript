@@ -77,8 +77,12 @@ namespace ScarbroScript
                 case '}': AddToken(TokenType.RIGHT_BRACE); break;
                 case ',': AddToken(TokenType.COMMA); break;
                 case '.': AddToken(TokenType.DOT); break;
-                case '-': AddToken(TokenType.MINUS); break;
-                case '+': AddToken(TokenType.PLUS); break;
+                case '-':
+                    AddToken(Match('-') ? TokenType.DECREMENT : TokenType.MINUS);  
+                    break;
+                case '+': 
+                    AddToken(Match('+') ? TokenType.INCREMENT : TokenType.PLUS);
+                    break;
                 case ';': AddToken(TokenType.SEMICOLON); break;
                 case '*': AddToken(TokenType.STAR); break;
                 //Operators Bangs, Bang='s, etc.
@@ -100,7 +104,7 @@ namespace ScarbroScript
                         // A comment goes until the end of the line.
                         while (Peek() != '\n' && !IsAtEnd()) Advance();
                     }
-                    if (Match('*'))
+                    else if (Match('*'))
                     {
                         while (Peek() != '*' && !Match('/') && !IsAtEnd()) Advance();
                     }
