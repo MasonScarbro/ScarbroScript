@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-/*
+
 namespace ScarbroScript
 {
     // NOT NEEDED
@@ -17,12 +17,35 @@ namespace ScarbroScript
         //Uses the Visitor pattern to pass in a Binary Expr value (Object) and return a String (inplace of the genric type)
         public String VisitBinaryExpr(Expr.Binary expr)
         {
-            return Parenthesize(expr.oper.lexeme, expr.left, expr.right);
-        }
+            Object left = Print(expr.left);
+            Object right = Print(expr.right);
 
+            switch (expr.oper.type)
+            {
+                case TokenType.MINUS:
+
+                    return (double.Parse((string)left) - double.Parse((string)right)).ToString(); ;
+                case TokenType.SLASH:
+
+                    //Checks if dividing by zero
+
+                    return (double.Parse((string)left) / double.Parse((string)right)).ToString(); ;
+                case TokenType.STAR:
+
+                    return (double.Parse((string)left) * double.Parse((string)right)).ToString();
+                case TokenType.PLUS:
+                    //Console.WriteLine((double.Parse((string)left) + double.Parse((string)right)).ToString());
+                    return (double.Parse((string)left) + double.Parse((string)right)).ToString();
+
+
+                    throw new RuntimeError(expr.oper, "Make sure that both operators are either a double or string (Remember string concatnation is allowed)!");
+                    break;
+            }
+            return null;
+        }
         public String VisitGroupingExpr(Expr.Grouping expr)
         {
-            return Parenthesize("group", expr.expression);
+            return Print(expr.expression);
         }
         public String VisitLiteralExpr(Expr.Literal expr)
         {
@@ -49,7 +72,27 @@ namespace ScarbroScript
             return builder.ToString();
         }
 
+        string Expr.IVisitor<string>.VisitAssignExpr(Expr.Assign expr)
+        {
+            throw new NotImplementedException();
+        }
 
+
+        string Expr.IVisitor<string>.VisitCallExpr(Expr.Call expr)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        string Expr.IVisitor<string>.VisitLogicalExpr(Expr.Logical expr)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        string Expr.IVisitor<string>.VisitVariableExpr(Expr.Variable expr)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
-*/

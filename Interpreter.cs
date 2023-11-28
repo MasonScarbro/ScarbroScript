@@ -18,6 +18,10 @@ namespace ScarbroScript
         public Interpreter()
         {
             globals.Define("clock", new Clock());
+            globals.Define("evalExpr", new EvaluateExpression());
+            globals.Define("parseToNum", new ParseToNum());
+            globals.Define("parseToString", new ParseToString());
+            globals.Define("Scarbro", new Scarbro());
             enviornment = globals;
         }
 
@@ -132,6 +136,9 @@ namespace ScarbroScript
                 case TokenType.STAR:
                     CheckNumberOperands(expr.oper, left, right);
                     return (double)left * (double)right;
+                case TokenType.EXPON:
+                    CheckNumberOperands(expr.oper, left, right);
+                    return Math.Pow((double)left, (double)right);
                 case TokenType.PLUS:
                     if (left.GetType() == typeof(Double) && right.GetType() == typeof(Double))
                     {

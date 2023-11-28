@@ -84,7 +84,9 @@ namespace ScarbroScript
                     AddToken(Match('+') ? TokenType.INCREMENT : TokenType.PLUS);
                     break;
                 case ';': AddToken(TokenType.SEMICOLON); break;
-                case '*': AddToken(TokenType.STAR); break;
+                case '*':
+                    AddToken(Match('*') ? TokenType.EXPON : TokenType.STAR);
+                    break;
                 //Operators Bangs, Bang='s, etc.
                 case '!':
                     AddToken(Match('=') ? TokenType.BANG_EQUAL : TokenType.BANG);

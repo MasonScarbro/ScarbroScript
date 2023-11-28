@@ -30,6 +30,18 @@ namespace ScarbroScript
             return statements;
         }
 
+
+        public Expr ParseToExpr()
+        {
+            try
+            {
+                return Expression();   
+            } catch (ParseError e)
+            {
+                return null;
+            }
+        }
+
         private Stmt Statement()
         {
             Console.WriteLine("Parsing Statement...");
@@ -372,7 +384,7 @@ namespace ScarbroScript
         {
             Expr expr = Unary();
 
-            while (Match(TokenType.STAR, TokenType.SLASH))
+            while (Match(TokenType.STAR, TokenType.SLASH, TokenType.EXPON))
             {
                 Token oper = Previous();
                 Expr right = Unary();
