@@ -1,2 +1,3 @@
 @echo off
-C:\Users\Admin\source\repos\ScarbroScript\ScarbroScript\bin\Debug\ScarbroScript.exe %*
+set "scriptPath=%~dp0"
+"%scriptPath%ScarbroScript.exe" %*

@@ -21,6 +21,11 @@ namespace ScarbroScript
             globals.Define("evalExpr", new EvaluateExpression());
             globals.Define("parseToNum", new ParseToNum());
             globals.Define("parseToString", new ParseToString());
+            globals.Define("sin", new SinVal());
+            globals.Define("cos", new CosVal());
+            globals.Define("tan", new TanVal());
+            globals.Define("rndNum", new RandomNum());
+            globals.Define("scarbroNumber", new Random().Next(int.MinValue, int.MaxValue));
             globals.Define("Scarbro", new Scarbro());
             enviornment = globals;
         }

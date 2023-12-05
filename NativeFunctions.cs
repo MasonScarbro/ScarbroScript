@@ -104,6 +104,93 @@ namespace ScarbroScript
         public override string ToString() => "<native fn>";
     }
 
+    class SinVal : ScarbroScriptCallable
+    {
+        //Arity is 0 due to no arguments
+        public int Arity { get { return 1; } }
+
+        /// <summary>
+        /// Returns the Sin(x) value
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object Call(Interpreter interpreter, List<Object> arguments)
+        {
+
+            return Math.Sin((double)arguments[0]);
+
+        }
+
+        public override string ToString() => "<native fn>";
+    }
+
+    class CosVal : ScarbroScriptCallable
+    {
+        //Arity is 0 due to no arguments
+        public int Arity { get { return 1; } }
+
+        /// <summary>
+        /// Returns the Cos(x) value
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object Call(Interpreter interpreter, List<Object> arguments)
+        {
+
+            return Math.Cos((double)arguments[0]);
+
+        }
+
+        public override string ToString() => "<native fn>";
+    }
+
+    class TanVal : ScarbroScriptCallable
+    {
+        //Arity is 0 due to no arguments
+        public int Arity { get { return 1; } }
+
+        /// <summary>
+        /// Returns the Tan(x) value
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object Call(Interpreter interpreter, List<Object> arguments)
+        {
+
+            return Math.Tan((double)arguments[0]);
+
+        }
+
+        public override string ToString() => "<native fn>";
+    }
+
+    class RandomNum : ScarbroScriptCallable
+    {
+        //Arity is 0 due to no arguments
+        public int Arity { get { return 2; } }
+
+        /// <summary>
+        /// Returns a random number with bounds
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object Call(Interpreter interpreter, List<Object> arguments)
+        {
+            Random rand = new Random(); 
+            return rand.Next(int.Parse((string)arguments[0].ToString()), int.Parse((string)arguments[1].ToString()));
+
+        }
+
+
+        public override string ToString() => "<native fn>";
+    }
+
+    
+
     class Scarbro : ScarbroScriptCallable
     {
         //Arity is 0 due to no arguments
@@ -118,12 +205,24 @@ namespace ScarbroScript
         public object Call(Interpreter interpreter, List<Object> arguments)
         {
 
-            return "Mason Scarbro, Creator of this language and Mediocare Developer, \n" +
+            return 
+                @"The surname Scarbro was first found in North Riding of Yorkshire at Scarborough, a borough, markettown, and parish. [1]
+
+                ""The origin of this town has not been satisfactorily ascertained: it is supposed to have derived its name from the Saxon Scear, a rock, and Burgh, a fortified place. The earliest authentic record of it is a charter of Henry II., conferring certain privileges on the inhabitants; and in the reign of Henry III., a charter was granted for making a new pier at Scardeburgh, as the place was then called."" [2]
+
+                Some of the family were found further north in Scotland in early years too. ""Nicholas de Scardbrow witnessed charters by Willelmus de Hawoc, burgess of Perth, c. 1245 and Roger de Scardtheburge was clericus domini regis, c. 1272. Robert de Scardeburgh was parson of the church of Conington in 1295."" [3] But this latter source notes that the name was indeed from Yorkshire.
+
+                Sir Robert de Scorburgh (d. 1340), was Baron of the Exchequer and ""derived his name from Scorborough in the East Riding of Yorkshire. He is no doubt the Robert de Scorburgh of Beverley to whom there are some references in 1320 to 1322. At his death he is described as possessing the manor of Scoreby, together with property in Stamford Bridge and Etton."" [4]
+
+                It is only in the last few hundred years that the English language has been standardized. For that reason, early Anglo-Saxon surnames like Scarbro are characterized by many spelling variations. As the English language changed and incorporated elements of other European languages, even literate people changed the spelling of their names. The variations of the name Scarbro include: Scarbrough, Scarboro, Scarborough, Scasbridge, Scarbrow, Scarburg, Scarburgh, Scarsbridge and many more.
+
+                There are currently only 107 people with the surname Scarbro Alive Today. The Author, Of this Lang: Mason Scarbro Is one Of them!" +
+                "Mason Scarbro, Creator of this language and Mediocare Developer, \n" +
                 "Born July 7th 2003, \n" +
                 "[July 7th 2003, 5:06am]: Mason escapes his mothers canal \n" +
                 "[July 7th 2004-2009]: Mason has infintile amnesia from these points thus memories cannot be processed \n" +
                 "[2014]: Mason Graduates from 5th grade" +
-                "[2015]: Cam Newton goes to the superbowl (No relevent information pertaining to mason) \n" +
+                "[2015]: Cam Newton goes to the superbowl (No relevent information pertaining to Mason) \n" +
                 "[2017]: Mason starts Highschool \n" +
                 "[2021]: Mason Graduates Highschool \n";
 

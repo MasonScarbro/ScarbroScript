@@ -1,4 +1,3 @@
-#!C:\Users\Admin\source\repos\ScarbroScript\ScarbroScript\bin\Debug\ScarbroScript.exe
 
 // Delete the above shebang line to have the program run properly ^
 fun test(a){
