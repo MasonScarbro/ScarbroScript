@@ -1,12 +1,16 @@
 # ScarbroScript
 ![Group 1 (2)](https://github.com/MasonScarbro/MasonScarbro/assets/120221711/18bfe379-f06f-420f-92ad-1be45c1da007)
+<br></br>
 A Programming Language Im in The Middle Of Writing,
 Whilst Bare bones this is basically the C-sharp version of Jlox, Although with a very few differences
+<br></br>
 Additions to Jlox include:
 * break  statements (challenge)
 * a /* multiline comment (challenge)
 * and Decrement and Increment operators --var and ++var, which was not a book challenge
-* I hope to continue working on the language and add more built in functions 
+* Arrays and set, get, add, funcs `var a = ["mason", 9, 0] //More likes lists`
+* I hope to continue working on the language and add more built in functions
+<br></br> 
 Missing from Jlox include:
 * OOP classes 
 
