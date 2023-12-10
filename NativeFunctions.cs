@@ -189,7 +189,102 @@ namespace ScarbroScript
         public override string ToString() => "<native fn>";
     }
 
-    
+    class ArrGet : ScarbroScriptCallable
+    {
+        //Arity is 0 due to no arguments
+        public int Arity { get { return 2; } }
+
+        /// <summary>
+        /// Returns a random number with bounds
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object Call(Interpreter interpreter, List<Object> arguments)
+        {
+            if (arguments[0] is List<object> varArr)
+            {
+               return varArr[int.Parse(arguments[1].ToString())];
+            }
+            return "error";
+        }
+
+
+        public override string ToString() => "<native fn>";
+    }
+
+    class ArrSet : ScarbroScriptCallable
+    {
+        //Arity is 0 due to no arguments
+        public int Arity { get { return 3; } }
+
+        /// <summary>
+        /// Returns a random number with bounds
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object Call(Interpreter interpreter, List<Object> arguments)
+        {
+            if (arguments[0] is List<object> varArr)
+            {
+                varArr[int.Parse(arguments[1].ToString())] = arguments[2];
+            }
+            return "error";
+        }
+
+
+        public override string ToString() => "<native fn>";
+    }
+
+    class ArrAdd : ScarbroScriptCallable
+    {
+        //Arity is 0 due to no arguments
+        public int Arity { get { return 2; } }
+
+        /// <summary>
+        /// Returns a random number with bounds
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object Call(Interpreter interpreter, List<Object> arguments)
+        {
+            if (arguments[0] is List<object> varArr)
+            {
+                varArr.Add(arguments[1]);
+            }
+            return "error";
+        }
+
+
+        public override string ToString() => "<native fn>";
+    }
+
+    class ArrLen : ScarbroScriptCallable
+    {
+        //Arity is 0 due to no arguments
+        public int Arity { get { return 1; } }
+
+        /// <summary>
+        /// Returns a random number with bounds
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object Call(Interpreter interpreter, List<Object> arguments)
+        {
+            if (arguments[0] is List<object> varArr)
+            {
+                return varArr.Count();
+            }
+            return "Length Must have 2 params and Must be either a String or List";
+        }
+
+
+        public override string ToString() => "<native fn>";
+    }
+
 
     class Scarbro : ScarbroScriptCallable
     {

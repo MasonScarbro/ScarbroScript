@@ -14,7 +14,7 @@ namespace ScarbroScript
 			T VisitLogicalExpr(Logical expr);
 			T VisitUnaryExpr(Unary expr);
 			T VisitVariableExpr(Variable expr);
-
+			T VisitArrayExpr(Array expr);
 			T VisitCallExpr(Call expr);
 		}
 		public class Assign : Expr
@@ -133,6 +133,24 @@ namespace ScarbroScript
 			}
 
 			public readonly Token name;
+		}
+
+		public class Array : Expr
+		{
+			public Array(Token bracket, List<Expr> elements)
+			{
+				this.bracket = bracket;
+				this.elements = elements;
+			}
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitArrayExpr(this);
+
+			}
+
+			public readonly Token bracket;
+			public readonly List<Expr> elements;
 		}
 
 		public class Call : Expr

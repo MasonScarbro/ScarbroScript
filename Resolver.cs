@@ -254,5 +254,10 @@ namespace ScarbroScript
             scopes.Peek()[name.lexeme] = true;
 
         }
+
+        public object VisitArrayExpr(Expr.Array expr)
+        {
+            return null;
+        }
     }
 }

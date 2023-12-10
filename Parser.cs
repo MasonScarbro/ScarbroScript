@@ -444,6 +444,24 @@ namespace ScarbroScript
             return new Expr.Call(callee, paren, arguments);
         }
 
+        private Expr Array()
+        {
+            List<Expr> elements = new List<Expr>();
+            // checks for no arguments!
+            if (!Check(TokenType.RIGHT_BRACKET))
+            {
+                do
+                {
+                    elements.Add(Expression());
+
+                } while (Match(TokenType.COMMA));
+
+            }
+            Token bracket = Consume(TokenType.RIGHT_BRACKET, "Expected ']' After arguments");
+
+            return new Expr.Array(bracket, elements);
+        }
+
         private Expr Primary()
         {
             if (Match(TokenType.FALSE)) return new Expr.Literal(false);
@@ -467,6 +485,12 @@ namespace ScarbroScript
                 return new Expr.Grouping(expr);
 
             }
+
+            if (Match(TokenType.LEFT_BRACKET))
+            {
+                return Array();
+            }
+
             throw Error(Peek(), "Expect Expression");
             
         }

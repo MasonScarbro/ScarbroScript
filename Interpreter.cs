@@ -19,6 +19,10 @@ namespace ScarbroScript
         {
             globals.Define("clock", new Clock());
             globals.Define("evalExpr", new EvaluateExpression());
+            globals.Define("get", new ArrGet());
+            globals.Define("set", new ArrSet());
+            globals.Define("add", new ArrAdd());
+            globals.Define("len", new ArrLen());
             globals.Define("parseToNum", new ParseToNum());
             globals.Define("parseToString", new ParseToString());
             globals.Define("sin", new SinVal());
@@ -195,6 +199,21 @@ namespace ScarbroScript
                 }
                 return text;
             }
+
+            if (obj is List<object> arr)
+            {
+                String arrayAsString = "[";
+                for (int i = 0; i < arr.Count; i++)
+                {
+                    if (i == (arr.Count - 1))
+                    {
+                        arrayAsString += arr[i].ToString();
+                    } else arrayAsString += arr[i].ToString() + ",";
+
+                }
+                return arrayAsString + "]";
+            }
+
             return obj.ToString();
         }
 
@@ -387,6 +406,16 @@ namespace ScarbroScript
             return null;
         }
 
+        public object VisitArrayExpr(Expr.Array expr)
+        {
+            List<object> evalArr = new List<object>();
+            foreach (Expr element in expr.elements)
+            {
+               evalArr.Add(Evaluate(element));
+            }
+            return evalArr;
+        }
+
         public object VisitReturnStmt(Stmt.Return stmt)
         {
             Object value = null;
@@ -493,5 +522,6 @@ namespace ScarbroScript
             locals.Add(expr, depth);
         }
 
+        
     }
 }

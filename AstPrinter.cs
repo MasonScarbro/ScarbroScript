@@ -14,6 +14,11 @@ namespace ScarbroScript
             return expr.Accept(this);
         }
 
+        public string VisitArrayExpr(Expr.Array expr)
+        {
+            throw new NotImplementedException();
+        }
+
         //Uses the Visitor pattern to pass in a Binary Expr value (Object) and return a String (inplace of the genric type)
         public String VisitBinaryExpr(Expr.Binary expr)
         {
