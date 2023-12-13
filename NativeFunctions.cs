@@ -62,6 +62,114 @@ namespace ScarbroScript
         public override string ToString() => "<native fn>";
     }
 
+    class Log : ScarbroScriptCallable
+    {
+        //Arity is 0 due to no arguments
+        public int Arity { get { return 1; } }
+
+        /// <summary>
+        ///  I literally reused the resources I already wrote. 
+        ///  Basically we pass in the expression as an argument 
+        ///  tokenize it and then interpret it but of course we treat it
+        ///  as an Expression instead of list of Stmts, we use the AstPrinter as a sort of interpreter only built for expressions
+        ///  similar to what was written at the beginning of the book this way we can ignore things like ';' and etc.
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object Call(Interpreter interpreter, List<Object> arguments)
+        {
+
+            Console.WriteLine(arguments[0]);
+            return null;
+
+
+        }
+
+        public override string ToString() => "<native fn>";
+    }
+
+    class ReadFromCons : ScarbroScriptCallable
+    {
+        //Arity is 0 due to no arguments
+        public int Arity { get { return 0; } }
+
+        /// <summary>
+        ///  Reads from the console
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object Call(Interpreter interpreter, List<Object> arguments)
+        {
+            
+            String input = Console.ReadLine();
+            return input;
+
+        }
+
+        public override string ToString() => "<native fn>";
+    }
+
+
+    class Matrix : ScarbroScriptCallable
+    {
+        //Arity is 0 due to no arguments
+        public int Arity { get { return 1; } }
+
+        /// <summary>
+        ///  Reads from the console
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object Call(Interpreter interpreter, List<Object> arguments)
+        {
+
+            String matrix = "010101010101010101001110101010101010101010110101010101010100110101010101010";
+            Random rand = new Random();
+
+            char[] matrixArr = matrix.Substring(0, (matrix.Length / 4) - 1).ToCharArray();
+            int iter = 0;
+            while (iter < (double)arguments[0])
+            {
+                if (rand.Next(0, 1) == 1)
+                {
+                    Array.Reverse(matrixArr);
+                }
+                String matrix1 = new String(matrixArr);
+                matrixArr = matrix.Substring(matrix.Length / 4, (matrix.Length / 2) - 1).ToCharArray();
+                if (rand.Next(1, 2) == 2)
+                {
+                    Array.Reverse(matrixArr);
+                }
+                String matrix2 = new String(matrixArr);
+                matrixArr = matrix.Substring(matrix.Length / 2).ToCharArray();
+                if (rand.Next(0, 2) == 2)
+                {
+                    Array.Reverse(matrixArr);
+                }
+                String matrix3 = new String(matrixArr);
+                matrixArr = matrix.Substring((matrix.Length / 2) + (matrix.Length / 4)).ToCharArray();
+                if (rand.Next(0, 2) == 2)
+                {
+                    Array.Reverse(matrixArr);
+                }
+                String matrix4 = new String(matrixArr);
+                matrix += matrix1 + matrix2 + matrix3 + matrix4;
+                
+                Console.WriteLine(matrix);
+                iter++;
+            }
+            
+            return null;
+
+
+        }
+
+        public override string ToString() => "<native fn>";
+    }
+
     class ParseToNum : ScarbroScriptCallable
     {
         //Arity is 0 due to no arguments

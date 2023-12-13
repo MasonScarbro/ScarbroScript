@@ -28,6 +28,9 @@ namespace ScarbroScript
             globals.Define("sin", new SinVal());
             globals.Define("cos", new CosVal());
             globals.Define("tan", new TanVal());
+            globals.Define("log", new Log());
+            globals.Define("read", new ReadFromCons());
+            globals.Define("matrix", new Matrix());
             globals.Define("rndNum", new RandomNum());
             globals.Define("scarbroNumber", new Random().Next(int.MinValue, int.MaxValue));
             globals.Define("Scarbro", new Scarbro());
