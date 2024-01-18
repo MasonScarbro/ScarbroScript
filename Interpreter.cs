@@ -22,6 +22,8 @@ namespace ScarbroScript
             globals.Define("get", new ArrGet());
             globals.Define("set", new ArrSet());
             globals.Define("add", new ArrAdd());
+            globals.Define("reverse", new ReverseArr());
+            globals.Define("sort", new SortArr());
             globals.Define("len", new ArrLen());
             globals.Define("parseToNum", new ParseToNum());
             globals.Define("parseToString", new ParseToString());

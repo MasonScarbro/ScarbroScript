@@ -1,0 +1,7 @@
+C:\Users\Admin\source\repos\ScarbroScript\Tools\bin\Debug\Tools.exe.config
+C:\Users\Admin\source\repos\ScarbroScript\Tools\bin\Debug\Tools.exe
+C:\Users\Admin\source\repos\ScarbroScript\Tools\bin\Debug\Tools.pdb
+C:\Users\Admin\source\repos\ScarbroScript\Tools\obj\Debug\Tools.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\ScarbroScript\Tools\obj\Debug\Tools.exe
+C:\Users\Admin\source\repos\ScarbroScript\Tools\obj\Debug\Tools.pdb
+C:\Users\Admin\source\repos\ScarbroScript\Tools\obj\Debug\Tools.csproj.AssemblyReference.cache

@@ -393,6 +393,60 @@ namespace ScarbroScript
         public override string ToString() => "<native fn>";
     }
 
+    class ReverseArr : ScarbroScriptCallable
+    {
+        //Arity is 0 due to no arguments
+        public int Arity { get { return 1; } }
+
+        /// <summary>
+        /// Returns a random number with bounds
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object Call(Interpreter interpreter, List<Object> arguments)
+        {
+            if (arguments[0] is List<object> varArr)
+            {
+                varArr.Reverse();
+            }
+            else if (arguments[0] is String s)
+            {
+                char[] charArray = s.ToCharArray();
+                Array.Reverse(charArray);
+                return new String(charArray);
+            }
+            return "error";
+        }
+
+
+        public override string ToString() => "<native fn>";
+    }
+
+    class SortArr : ScarbroScriptCallable
+    {
+        //Arity is 0 due to no arguments
+        public int Arity { get { return 1; } }
+
+        /// <summary>
+        /// Returns a random number with bounds
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object Call(Interpreter interpreter, List<Object> arguments)
+        {
+            if (arguments[0] is List<object> varArr)
+            {
+                varArr.Sort();
+            }
+            
+            return "error";
+        }
+
+
+        public override string ToString() => "<native fn>";
+    }
 
     class Scarbro : ScarbroScriptCallable
     {
