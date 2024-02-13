@@ -123,9 +123,11 @@ namespace ScarbroScript
 		}
 		public class Variable : Expr
 		{
-			public Variable(Token name) 
+			public Variable(Token name, bool isArray, Expr index) 
 			{
 				this.name = name;
+				this.isArray = isArray;
+				this.index = index;
 			}
 
 			public override T Accept<T>(IVisitor<T> visitor) 
@@ -135,6 +137,8 @@ namespace ScarbroScript
 			}
 
 			public readonly Token name;
+			public readonly bool isArray;
+			public readonly Expr index;
 		}
 
 		public class Array : Expr

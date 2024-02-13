@@ -483,7 +483,19 @@ namespace ScarbroScript
 
             if (Match(TokenType.IDENTIFIER))
             {
-                return new Expr.Variable(Previous());
+                Expr index = null;
+                bool isArray = false;
+                Token variable = Previous();
+                if (Match(TokenType.LEFT_BRACKET))
+                {
+                    index = Assignment();
+                    isArray = true;
+                    Consume(TokenType.RIGHT_BRACKET, "Expected ']'");
+                    Console.WriteLine(index);
+
+                }
+                Console.WriteLine(variable.lexeme);
+                return new Expr.Variable(variable, isArray, index);
             }
 
             if (Match(TokenType.LEFT_PAREN))

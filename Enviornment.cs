@@ -22,25 +22,39 @@ namespace ScarbroScript
             this.enclosing = enclosing;
         }
 
-        public Object Get(Token name)
+        public Object Get(Token name, object index)
         {
             if (values.ContainsKey(name.lexeme))
             {
-                return values[name.lexeme];
+                if (index != null && values[name.lexeme] is List<object> arr)
+                {
+                    return arr[int.Parse(index.ToString())];
+                }
+                else
+                {
+                    return values[name.lexeme];
+                }
+                
             }
 
-            if (enclosing != null) return enclosing.Get(name); // recursivley gets the enclosing valuess
+            if (enclosing != null) return enclosing.Get(name, index); // recursivley gets the enclosing valuess
 
             throw new RuntimeError(name, "Undefined variable: " + name.lexeme);
         }
 
-        public Object GetAt(int distance, String name)
+        public Object GetAt(int distance, String name, object index)
         {
+            if (Ancestor(distance).values[name] is List<object> arr)
+            {
+                return arr[int.Parse(index.ToString())];
+            }
             return Ancestor(distance).values[name];
         }
 
+
         public void AssignAt(int distance, Token name, Object value)
         {
+
             Ancestor(distance).values[name.lexeme] = value;
         }
         
@@ -87,7 +101,7 @@ namespace ScarbroScript
         public void IndexAssignAt(int distance, Token name, object index, Object value)
         {
 
-            var varVal = GetAt(distance, name.lexeme);
+            var varVal = GetAt(distance, name.lexeme, index);
             if (varVal is List<object> arr)
             {
 
@@ -105,7 +119,7 @@ namespace ScarbroScript
         public void IndexAssign(Token name, object index, Object value)
         {
 
-            var varVal = Get(name);
+            var varVal = Get(name, index);
             if (varVal is List<object> arr)
             {
 

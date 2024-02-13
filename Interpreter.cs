@@ -531,15 +531,47 @@ namespace ScarbroScript
 
         private Object LookUpVariable(Token name, Expr expr)
         {
+            
             var wasFound = locals.TryGetValue(expr, out var distance);
+            
             if (wasFound)
             {
-                return enviornment.GetAt(distance, name.lexeme);
+                if (expr is Expr.Variable ex)
+                {
+                    if (ex.index == null)
+                    {
+                        return enviornment.GetAt(distance, name.lexeme, null);
+                    }
+                    else
+                    {
+                        object ind = Evaluate(ex.index);
+                        return enviornment.GetAt(distance, name.lexeme, ind);
+                    }
+                    
+                }
+                
             } 
             else
             {
-                return globals.Get(name);
+                if (expr is Expr.Variable ex)
+                {
+                    Console.WriteLine(ex.index);
+                    if (ex.index == null)
+                    {
+                        return globals.Get(name, null);
+                    }
+                    else
+                    {
+                        object ind = Evaluate(ex.index);
+                        return globals.Get(name, ind);
+                    }
+                    
+                }
+                
             }
+
+            throw new RuntimeError(name, "There Was An Error Interpreting The " + name + "at index");
+            return null;
 
         }
 
