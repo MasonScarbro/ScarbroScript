@@ -10,6 +10,7 @@ var a = 9;
 test(a);
 
 var b = a * 8;
+++b;
 print b;
 //I dont know what else to put
 print "Strings work!";
