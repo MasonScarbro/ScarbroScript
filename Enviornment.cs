@@ -84,5 +84,41 @@ namespace ScarbroScript
             throw new RuntimeError(name, "Undefined variable " + name.lexeme);
         }
 
+        public void IndexAssignAt(int distance, Token name, object index, Object value)
+        {
+
+            var varVal = GetAt(distance, name.lexeme);
+            if (varVal is List<object> arr)
+            {
+
+
+                arr[int.Parse(index.ToString())] = value;
+
+            }
+            else
+            {
+                throw new RuntimeError(name, "Undefined variable " + name.lexeme);
+            }
+            
+        }
+
+        public void IndexAssign(Token name, object index, Object value)
+        {
+
+            var varVal = Get(name);
+            if (varVal is List<object> arr)
+            {
+
+
+                arr[int.Parse(index.ToString())] = value;
+
+            }
+            else
+            {
+                throw new RuntimeError(name, "Undefined variable " + name.lexeme);
+            }
+            
+        }
+
     }
 }

@@ -19,10 +19,11 @@ namespace ScarbroScript
 		}
 		public class Assign : Expr
 		{
-			public Assign(Token name, Expr value) 
+			public Assign(Token name, Expr value, Expr index) 
 			{
 				this.name = name;
 				this.value = value;
+				this.index = index;
 			}
 
 			public override T Accept<T>(IVisitor<T> visitor) 
@@ -33,6 +34,7 @@ namespace ScarbroScript
 
 			public readonly Token name;
 			public readonly Expr value;
+			public readonly Expr index;
 		}
 		public class Binary : Expr
 		{
@@ -141,6 +143,7 @@ namespace ScarbroScript
 			{
 				this.bracket = bracket;
 				this.elements = elements;
+				
 			}
 
 			public override T Accept<T>(IVisitor<T> visitor)
@@ -151,6 +154,7 @@ namespace ScarbroScript
 
 			public readonly Token bracket;
 			public readonly List<Expr> elements;
+			
 		}
 
 		public class Call : Expr

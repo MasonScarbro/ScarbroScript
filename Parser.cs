@@ -76,7 +76,7 @@ namespace ScarbroScript
 
         private Stmt ForStatement()
         {
-            Consume(TokenType.LEFT_PAREN, "Expected a '(' after and if");
+            Consume(TokenType.LEFT_PAREN, "Expected a '(' after for");
             loopDepth++;
             Stmt initializer;
             if (Match(TokenType.SEMICOLON))
@@ -239,7 +239,13 @@ namespace ScarbroScript
         private Expr Assignment()
         {
             Expr expr = Or();
-
+            Expr index = null;
+            if (Match(TokenType.LEFT_BRACKET))
+            {
+                index = Assignment();
+                Consume(TokenType.RIGHT_BRACKET, "Expected ']'");
+                Console.WriteLine(index);
+            }
             if (Match(TokenType.EQUAL))
             {
                 Token equals = Previous();
@@ -248,8 +254,9 @@ namespace ScarbroScript
                 if (expr.GetType() == typeof(Expr.Variable))
                 {
                     Token name = ((Expr.Variable)expr).name;
-                    return new Expr.Assign(name, value);
+                    return new Expr.Assign(name, value, index);
                 }
+                
                 Error(equals, "Invalid Assignment Target");
             }
 
@@ -326,6 +333,7 @@ namespace ScarbroScript
             Token name = Consume(TokenType.IDENTIFIER, "Expected Variable name ");
 
             Expr intializer = null;
+            
             if (Match(TokenType.EQUAL))
             {
                 intializer = Expression();

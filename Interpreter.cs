@@ -19,11 +19,11 @@ namespace ScarbroScript
         {
             globals.Define("clock", new Clock());
             globals.Define("evalExpr", new EvaluateExpression());
-            globals.Define("get", new ArrGet());
-            globals.Define("set", new ArrSet());
-            globals.Define("add", new ArrAdd());
-            globals.Define("reverse", new ReverseArr());
-            globals.Define("sort", new SortArr());
+            globals.Define("arr_get", new ArrGet());
+            globals.Define("arr_set", new ArrSet());
+            globals.Define("arr_add", new ArrAdd());
+            globals.Define("arr_reverse", new ReverseArr());
+            globals.Define("arr_sort", new SortArr());
             globals.Define("len", new ArrLen());
             globals.Define("parseToNum", new ParseToNum());
             globals.Define("parseToString", new ParseToString());
@@ -289,12 +289,33 @@ namespace ScarbroScript
             var found = locals.TryGetValue(expr, out var distance);
             if (found)
             {
-                Console.WriteLine($"Assigned variable {expr.name.lexeme} with value: {value} in scope: {distance}");
-                enviornment.AssignAt(distance, expr.name, value);
+                if (expr.index != null)
+                {
+                    var index = Evaluate(expr.index);
+                    enviornment.IndexAssignAt(distance, expr.name, index, value);
+
+                }
+                else
+                {
+                    enviornment.AssignAt(distance, expr.name, value);
+                }
+                
+                
             } 
             else
             {
-                globals.Assign(expr.name, value);
+
+                if (expr.index != null)
+                {
+                    var index = Evaluate(expr.index);
+                    globals.IndexAssign(expr.name, index, value);
+
+                }
+                else
+                {
+                    globals.Assign(expr.name, value);
+                }
+                
             }
 
             return value;
