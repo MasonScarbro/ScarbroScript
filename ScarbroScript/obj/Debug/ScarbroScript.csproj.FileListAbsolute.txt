@@ -1,7 +1,0 @@
-C:\Users\Admin\source\repos\ScarbroScript\ScarbroScript\bin\Debug\ScarbroScript.exe.config
-C:\Users\Admin\source\repos\ScarbroScript\ScarbroScript\bin\Debug\ScarbroScript.exe
-C:\Users\Admin\source\repos\ScarbroScript\ScarbroScript\bin\Debug\ScarbroScript.pdb
-C:\Users\Admin\source\repos\ScarbroScript\ScarbroScript\obj\Debug\ScarbroScript.csproj.AssemblyReference.cache
-C:\Users\Admin\source\repos\ScarbroScript\ScarbroScript\obj\Debug\ScarbroScript.csproj.CoreCompileInputs.cache
-C:\Users\Admin\source\repos\ScarbroScript\ScarbroScript\obj\Debug\ScarbroScript.exe
-C:\Users\Admin\source\repos\ScarbroScript\ScarbroScript\obj\Debug\ScarbroScript.pdb
