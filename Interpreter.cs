@@ -291,8 +291,15 @@ namespace ScarbroScript
             {
                 if (expr.index != null)
                 {
-                    var index = Evaluate(expr.index);
-                    enviornment.IndexAssignAt(distance, expr.name, index, value);
+                    List<object> inds = new List<object>();
+                    foreach (Expr index in expr.index)
+                    {
+                        object ind = Evaluate(index);
+                        inds.Add(ind);
+                        Console.WriteLine(inds[0]);
+                    }
+                    
+                    enviornment.IndexAssignAt(distance, expr.name, inds, value);
 
                 }
                 else
@@ -307,8 +314,14 @@ namespace ScarbroScript
 
                 if (expr.index != null)
                 {
-                    var index = Evaluate(expr.index);
-                    globals.IndexAssign(expr.name, index, value);
+                    List<object> inds = new List<object>();
+                    foreach (Expr index in expr.index)
+                    {
+                        object ind = Evaluate(index);
+                        inds.Add(ind);
+                        Console.WriteLine(inds[0]);
+                    }
+                    globals.IndexAssign(expr.name, inds, value);
 
                 }
                 else
@@ -544,8 +557,16 @@ namespace ScarbroScript
                     }
                     else
                     {
-                        object ind = Evaluate(ex.index);
-                        return enviornment.GetAt(distance, name.lexeme, ind);
+                        List<object> inds = new List<object>();
+                        foreach (Expr index in ex.index)
+                        {
+                            object ind = Evaluate(index);
+                            inds.Add(ind);
+                            Console.WriteLine(inds[0]);
+                        }
+                        
+                        
+                        return enviornment.GetAt(distance, name.lexeme, inds);
                     }
                     
                 }
@@ -562,8 +583,14 @@ namespace ScarbroScript
                     }
                     else
                     {
-                        object ind = Evaluate(ex.index);
-                        return globals.Get(name, ind);
+                        List<object> inds = new List<object>();
+                        foreach (Expr index in ex.index)
+                        {
+                            object ind = Evaluate(index);
+                            inds.Add(ind);
+                            Console.WriteLine(inds[0]);
+                        }
+                        return globals.Get(name, inds);
                     }
                     
                 }

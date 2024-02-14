@@ -22,13 +22,15 @@ namespace ScarbroScript
             this.enclosing = enclosing;
         }
 
-        public Object Get(Token name, object index)
+        public Object Get(Token name, List<object> index)
         {
             if (values.ContainsKey(name.lexeme))
             {
-                if (index != null && values[name.lexeme] is List<object> arr)
+                Console.WriteLine(index.ToString());
+                if ((index != null && index.Count !=0) && values[name.lexeme] is List<object> arr)
                 {
-                    return arr[int.Parse(index.ToString())];
+                    Console.WriteLine(index.ToString());
+                    return arr[int.Parse(index[0].ToString())];
                 }
                 else
                 {
@@ -42,11 +44,11 @@ namespace ScarbroScript
             throw new RuntimeError(name, "Undefined variable: " + name.lexeme);
         }
 
-        public Object GetAt(int distance, String name, object index)
+        public Object GetAt(int distance, String name, List<object> index)
         {
             if (Ancestor(distance).values[name] is List<object> arr)
             {
-                return arr[int.Parse(index.ToString())];
+                return arr[int.Parse(index[0].ToString())];
             }
             return Ancestor(distance).values[name];
         }
@@ -98,33 +100,34 @@ namespace ScarbroScript
             throw new RuntimeError(name, "Undefined variable " + name.lexeme);
         }
 
-        public void IndexAssignAt(int distance, Token name, object index, Object value)
+        public void IndexAssignAt(int distance, Token name, List<object> index, Object value)
         {
 
-            var varVal = GetAt(distance, name.lexeme, index);
-            if (varVal is List<object> arr)
+            if (Ancestor(distance).values[name.lexeme] is List<object> arr)
             {
 
 
-                arr[int.Parse(index.ToString())] = value;
+                arr[int.Parse(index[0].ToString())] = value;
+
 
             }
             else
             {
                 throw new RuntimeError(name, "Undefined variable " + name.lexeme);
             }
-            
+
         }
 
-        public void IndexAssign(Token name, object index, Object value)
+        public void IndexAssign(Token name, List<object> index, Object value)
         {
 
-            var varVal = Get(name, index);
-            if (varVal is List<object> arr)
+            
+            if (values[name.lexeme] is List<object> arr)
             {
 
 
-                arr[int.Parse(index.ToString())] = value;
+                arr[int.Parse(index[0].ToString())] = value;
+                
 
             }
             else

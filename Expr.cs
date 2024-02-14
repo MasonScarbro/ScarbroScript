@@ -19,7 +19,7 @@ namespace ScarbroScript
 		}
 		public class Assign : Expr
 		{
-			public Assign(Token name, Expr value, Expr index) 
+			public Assign(Token name, Expr value, List<Expr> index) 
 			{
 				this.name = name;
 				this.value = value;
@@ -34,7 +34,7 @@ namespace ScarbroScript
 
 			public readonly Token name;
 			public readonly Expr value;
-			public readonly Expr index;
+			public readonly List<Expr>  index;
 		}
 		public class Binary : Expr
 		{
@@ -123,7 +123,7 @@ namespace ScarbroScript
 		}
 		public class Variable : Expr
 		{
-			public Variable(Token name, bool isArray, Expr index) 
+			public Variable(Token name, bool isArray, List<Expr> index) 
 			{
 				this.name = name;
 				this.isArray = isArray;
@@ -138,7 +138,7 @@ namespace ScarbroScript
 
 			public readonly Token name;
 			public readonly bool isArray;
-			public readonly Expr index;
+			public readonly List<Expr> index;
 		}
 
 		public class Array : Expr

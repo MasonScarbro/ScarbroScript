@@ -239,13 +239,7 @@ namespace ScarbroScript
         private Expr Assignment()
         {
             Expr expr = Or();
-            Expr index = null;
-            if (Match(TokenType.LEFT_BRACKET))
-            {
-                index = Assignment();
-                Consume(TokenType.RIGHT_BRACKET, "Expected ']'");
-                Console.WriteLine(index);
-            }
+
             if (Match(TokenType.EQUAL))
             {
                 Token equals = Previous();
@@ -254,6 +248,11 @@ namespace ScarbroScript
                 if (expr.GetType() == typeof(Expr.Variable))
                 {
                     Token name = ((Expr.Variable)expr).name;
+                    List<Expr> index = ((Expr.Variable)expr).index;
+                    if (index == null || index.Count == 0)
+                    {
+                        return new Expr.Assign(name, value, null);
+                    }
                     return new Expr.Assign(name, value, index);
                 }
                 
@@ -483,12 +482,12 @@ namespace ScarbroScript
 
             if (Match(TokenType.IDENTIFIER))
             {
-                Expr index = null;
+                List<Expr> index = new List<Expr>();
                 bool isArray = false;
                 Token variable = Previous();
                 if (Match(TokenType.LEFT_BRACKET))
                 {
-                    index = Assignment();
+                    index.Add(Or());
                     isArray = true;
                     Consume(TokenType.RIGHT_BRACKET, "Expected ']'");
                     Console.WriteLine(index);
@@ -612,6 +611,7 @@ namespace ScarbroScript
             return tokens[current - 1];
         }
 
+        
       
 
         private bool IsInsideLoop()
