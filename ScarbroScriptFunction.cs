@@ -36,6 +36,14 @@ namespace ScarbroScript
             
         }
 
+
+        public ScarbroScriptFunction Bind(ScarbroScriptInstance instance)
+        {
+            Enviornment env = new Enviornment(enclosureEnviornment);
+            env.Define("this", instance);
+            return new ScarbroScriptFunction(declaration, env);
+        }
+
         public int Arity => declaration.parameters.Count;
 
         public override string ToString()

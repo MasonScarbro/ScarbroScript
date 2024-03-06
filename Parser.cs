@@ -254,6 +254,11 @@ namespace ScarbroScript
                         return new Expr.Assign(name, value, null);
                     }
                     return new Expr.Assign(name, value, index);
+                } 
+                else if (expr is Expr.Access) // Since the dot call are not technically variables they are Get Exprs (which are variables at the class level)
+                {
+                    Expr.Access get = (Expr.Access)expr;
+                    return new Expr.Set(get.obj, get.name, value);
                 }
                 
                 Error(equals, "Invalid Assignment Target");
@@ -294,6 +299,7 @@ namespace ScarbroScript
         {
             try
             {
+                if (Match(TokenType.CLASS)) return ClassDeclaration();
                 if (Match(TokenType.FUN)) return Function("function");
                 if (Match(TokenType.VAR)) return VarDeclaration();
                 
@@ -306,6 +312,21 @@ namespace ScarbroScript
             }
         }
 
+        private Stmt ClassDeclaration()
+        {
+            Token name = Consume(TokenType.IDENTIFIER, "Expected Class Name");
+            Consume(TokenType.LEFT_BRACE, "Expected '{' before class body (After class Identifier)");
+
+            List<Stmt.Function> methods = new List<Stmt.Function>();
+            while (!Check(TokenType.RIGHT_BRACE) && !IsAtEnd())
+            {
+                methods.Add(Function("method"));
+            }
+
+            Consume(TokenType.RIGHT_BRACE, "Expected '}' after class body");
+
+            return new Stmt.Class(name, methods);
+        }
 
         private Stmt.Function Function(String kind)
         {
@@ -424,6 +445,11 @@ namespace ScarbroScript
                 {
                     expr = ParseArgumentsAndFinishCall(expr);
                 }
+                else if (Match(TokenType.DOT))
+                {
+                    Token name = Consume(TokenType.IDENTIFIER, "Expected property name after '.'");
+                    expr = new Expr.Access(expr, name);
+                }
                 else
                 {
                     break;
@@ -479,6 +505,8 @@ namespace ScarbroScript
             {
                 return new Expr.Literal(Previous().literal);
             }
+
+            if (Match(TokenType.THIS)) return new Expr.This(Previous());
 
             if (Match(TokenType.IDENTIFIER))
             {

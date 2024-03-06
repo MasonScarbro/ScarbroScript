@@ -16,6 +16,13 @@ namespace ScarbroScript
 			T VisitVariableExpr(Variable expr);
 			T VisitArrayExpr(Array expr);
 			T VisitCallExpr(Call expr);
+
+			T VisitAccessExpr(Access expr);
+
+			T VisitSetExpr(Set expr);
+
+			T VisitThisExpr(This expr);
+
 		}
 		public class Assign : Expr
 		{
@@ -183,6 +190,59 @@ namespace ScarbroScript
 
 		}
 
+		public class Access : Expr
+        {
+			public Access(Expr obj, Token name)
+            {
+				this.obj = obj;
+				this.name = name;
+            }
+
+            public override T Accept<T>(IVisitor<T> visitor)
+            {
+				return visitor.VisitAccessExpr(this);
+            }
+
+			public readonly Expr obj;
+			public readonly Token name;
+        }
+
+
+		public class Set : Expr
+        {
+
+			public Set(Expr obj, Token name, Expr value)
+            {
+				this.obj = obj;
+				this.name = name;
+				this.value = value;
+            }
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitSetExpr(this);
+			}
+
+			public readonly Expr obj;
+			public readonly Token name;
+			public readonly Expr value;
+        }
+
+
+		public class This : Expr
+        {
+			public This(Token keyword)
+            {
+				this.keyword = keyword;
+            }
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitThisExpr(this);
+			}
+
+			public readonly Token keyword;
+        }
 		public abstract T Accept<T>(IVisitor<T> visitor);
 
 	}

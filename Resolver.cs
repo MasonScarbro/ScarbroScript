@@ -16,7 +16,8 @@ namespace ScarbroScript
         private enum FunctionType
         {
             NONE,
-            FUNCTION
+            FUNCTION,
+            METHOD
         }
 
         public Resolver(Interpreter interpreter)
@@ -32,7 +33,46 @@ namespace ScarbroScript
             return null;
         }
 
+        public object VisitClassStmt(Stmt.Class stmt)
+        {
+            Declare(stmt.name);
+            Define(stmt.name);
 
+            BeginScope();
+            /// <summary>
+            /// Whenever there is a 'this' expr inside a method it
+            /// resolves to a local variable defined in an implicit scope
+            /// outside the block of the method
+            /// </summary>
+            scopes.Peek()["this"] = true; //make this a variable in the current scope
+            foreach (Stmt.Function method in stmt.methods)
+            {
+                FunctionType declaration = FunctionType.METHOD;
+                ResolveFunction(method, declaration);
+            }
+            EndScope(); //discard the scope when done 
+            return null;
+        }
+
+        public object VisitAccessExpr(Expr.Access expr)
+        {
+            Resolve(expr.obj); 
+            return null;
+        }
+
+        public object VisitSetExpr(Expr.Set expr)
+        {
+            Resolve(expr.value);
+            Resolve(expr.obj);
+            return null;
+        }
+
+
+        public object VisitThisExpr(Expr.This expr)
+        {
+            ResolveLocal(expr, expr.keyword);
+            return null;
+        }
 
         public object VisitVarStmt(Stmt.Var stmt)
         {

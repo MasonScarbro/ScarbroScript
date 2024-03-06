@@ -77,6 +77,11 @@ namespace ScarbroScript
             return builder.ToString();
         }
 
+        string Expr.IVisitor<string>.VisitAccessExpr(Expr.Access expr)
+        {
+            throw new NotImplementedException();
+        }
+
         string Expr.IVisitor<string>.VisitAssignExpr(Expr.Assign expr)
         {
             throw new NotImplementedException();
@@ -94,6 +99,15 @@ namespace ScarbroScript
             throw new NotImplementedException();
         }
 
+        string Expr.IVisitor<string>.VisitSetExpr(Expr.Set expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        string Expr.IVisitor<string>.VisitThisExpr(Expr.This expr)
+        {
+            throw new NotImplementedException();
+        }
 
         string Expr.IVisitor<string>.VisitVariableExpr(Expr.Variable expr)
         {

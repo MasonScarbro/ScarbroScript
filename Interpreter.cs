@@ -347,6 +347,48 @@ namespace ScarbroScript
             return null;
         }
 
+        public object VisitClassStmt(Stmt.Class stmt)
+        {
+            enviornment.Define(stmt.name.lexeme, null);
+            Dictionary<string, ScarbroScriptFunction> methods = new Dictionary<string, ScarbroScriptFunction>();
+            foreach (Stmt.Function method in stmt.methods)
+            {
+                ScarbroScriptFunction function = new ScarbroScriptFunction(method, enviornment);
+                methods[method.name.lexeme] = function;
+            }
+            ScarbroScriptClass klass = new ScarbroScriptClass(stmt.name.lexeme, methods);
+            enviornment.Assign(stmt.name, klass);
+            return null;
+        }
+
+
+        public object VisitAccessExpr(Expr.Access expr)
+        {
+            object obj = Evaluate(expr.obj);
+            if (obj is ScarbroScriptInstance _obj)
+            {
+                return _obj.Get(expr.name);
+            }
+            throw new RuntimeError(expr.name, "Only Instances have Properties");
+        }
+
+        public object VisitSetExpr(Expr.Set expr)
+        {
+            object obj = Evaluate(expr.obj);
+            if (obj is ScarbroScriptInstance _obj)
+            {
+                object value = Evaluate(expr.value);
+                _obj.Set(expr.name, value);
+                return value;
+            }
+            throw new RuntimeError(expr.name, "Only Instances have Properties");
+        }
+
+        public object VisitThisExpr(Expr.This expr)
+        {
+            return LookUpVariable(expr.keyword, expr);
+        }
+
         public object VisitIfStmt(Stmt.If stmt)
         {
             if (IsTruthy(Evaluate(stmt.condition)))
@@ -570,6 +612,10 @@ namespace ScarbroScript
                     }
                     
                 }
+                else if (expr is Expr.This)
+                {
+                    return enviornment.GetAt(distance, name.lexeme, null);
+                }
                 
             } 
             else
@@ -595,9 +641,10 @@ namespace ScarbroScript
                     
                 }
                 
+
             }
 
-            throw new RuntimeError(name, "There Was An Error Interpreting The " + name + "at index");
+            throw new RuntimeError(name, "There Was An Error Interpreting The " + name.lexeme + "at index");
             return null;
 
         }

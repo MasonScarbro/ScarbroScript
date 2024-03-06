@@ -18,6 +18,8 @@ namespace ScarbroScript
 
 			T VisitFunctionStmt(Function stmt);
 
+			T VisitClassStmt(Class stmt);
+
 			T VisitReturnStmt(Return stmt);
 		}
 		public class Block : Stmt
@@ -158,6 +160,28 @@ namespace ScarbroScript
 			public readonly Token name;
 			public readonly List<Token> parameters;
 			public readonly List<Stmt> body;
+
+		}
+
+		public class Class : Stmt
+		{
+			public Class(Token name, List<Stmt.Function> methods)
+			{
+
+				this.name = name;
+				this.methods = methods;
+				
+			}
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitClassStmt(this);
+
+			}
+
+			public readonly Token name;
+			public readonly List<Stmt.Function> methods;
+			
 
 		}
 
