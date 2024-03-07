@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AstPrinter.cs" />
+    <Compile Include="NativeMods\MathMod.cs" />
     <Compile Include="ScarbroScriptInstance.cs" />
     <Compile Include="ScarbroScriptClass.cs" />
     <Compile Include="Resolver.cs" />
@@ -69,5 +70,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -7,35 +7,7 @@ using System.Threading.Tasks;
 namespace ScarbroScript
 {
 
-    public class MathMod : ScarbroScriptClass
-    {
-        public MathMod(string name) : base(name, new Dictionary<string, ScarbroScriptFunction>(), new Dictionary<string, ScarbroScriptCallable>())
-        {
-            // Super 
-            
-            modMethods.Add("cosT", new CosValT());
-            
-        }
-
-        public class CosValT : ScarbroScriptCallable
-        {
-            // Arity is 0 due to no arguments
-            public int Arity { get { return 1; } }
-
-            /// <summary>
-            /// Returns the Cos(x) value
-            /// </summary>
-            /// <param name="interpreter"></param>
-            /// <param name="arguments"></param>
-            /// <returns></returns>
-            public object Call(Interpreter interpreter, List<object> arguments)
-            {
-                return Math.Cos((double)arguments[0]);
-            }
-
-            public override string ToString() => "<native fn>";
-        }
-    }
+    
     class Clock : ScarbroScriptCallable
     {
         //Arity is 0 due to no arguments
@@ -242,90 +214,7 @@ namespace ScarbroScript
         public override string ToString() => "<native fn>";
     }
 
-    class SinVal : ScarbroScriptCallable
-    {
-        //Arity is 0 due to no arguments
-        public int Arity { get { return 1; } }
-
-        /// <summary>
-        /// Returns the Sin(x) value
-        /// </summary>
-        /// <param name="interpreter"></param>
-        /// <param name="arguments"></param>
-        /// <returns></returns>
-        public object Call(Interpreter interpreter, List<Object> arguments)
-        {
-
-            return Math.Sin((double)arguments[0]);
-
-        }
-
-        public override string ToString() => "<native fn>";
-    }
-
-    class CosVal : ScarbroScriptCallable
-    {
-        //Arity is 0 due to no arguments
-        public int Arity { get { return 1; } }
-
-        /// <summary>
-        /// Returns the Cos(x) value
-        /// </summary>
-        /// <param name="interpreter"></param>
-        /// <param name="arguments"></param>
-        /// <returns></returns>
-        public object Call(Interpreter interpreter, List<Object> arguments)
-        {
-
-            return Math.Cos((double)arguments[0]);
-
-        }
-
-        public override string ToString() => "<native fn>";
-    }
-
-    class TanVal : ScarbroScriptCallable
-    {
-        //Arity is 0 due to no arguments
-        public int Arity { get { return 1; } }
-
-        /// <summary>
-        /// Returns the Tan(x) value
-        /// </summary>
-        /// <param name="interpreter"></param>
-        /// <param name="arguments"></param>
-        /// <returns></returns>
-        public object Call(Interpreter interpreter, List<Object> arguments)
-        {
-
-            return Math.Tan((double)arguments[0]);
-
-        }
-
-        public override string ToString() => "<native fn>";
-    }
-
-    class RandomNum : ScarbroScriptCallable
-    {
-        //Arity is 0 due to no arguments
-        public int Arity { get { return 2; } }
-
-        /// <summary>
-        /// Returns a random number with bounds
-        /// </summary>
-        /// <param name="interpreter"></param>
-        /// <param name="arguments"></param>
-        /// <returns></returns>
-        public object Call(Interpreter interpreter, List<Object> arguments)
-        {
-            Random rand = new Random(); 
-            return rand.Next(int.Parse((string)arguments[0].ToString()), int.Parse((string)arguments[1].ToString()));
-
-        }
-
-
-        public override string ToString() => "<native fn>";
-    }
+    
 
     class ArrGet : ScarbroScriptCallable
     {

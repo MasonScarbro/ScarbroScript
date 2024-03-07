@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ScarbroScript.NativeMods;
 
 namespace ScarbroScript
 {
@@ -17,7 +18,7 @@ namespace ScarbroScript
 
         public Interpreter()
         {
-            globals.Define("Math", new MathMod("Math"));
+            globals.Define("Math", new MathModI());
             globals.Define("clock", new Clock());
             globals.Define("evalExpr", new EvaluateExpression());
             globals.Define("arr_get", new ArrGet());
@@ -28,13 +29,10 @@ namespace ScarbroScript
             globals.Define("len", new ArrLen());
             globals.Define("parseToNum", new ParseToNum());
             globals.Define("parseToString", new ParseToString());
-            globals.Define("sin", new SinVal());
-            globals.Define("cos", new CosVal());
-            globals.Define("tan", new TanVal());
             globals.Define("log", new Log());
             globals.Define("read", new ReadFromCons());
             globals.Define("matrix", new Matrix());
-            globals.Define("rndNum", new RandomNum());
+            
             globals.Define("scarbroNumber", new Random().Next(int.MinValue, int.MaxValue));
             globals.Define("Scarbro", new Scarbro());
             enviornment = globals;
