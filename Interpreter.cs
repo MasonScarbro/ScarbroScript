@@ -17,6 +17,7 @@ namespace ScarbroScript
 
         public Interpreter()
         {
+            globals.Define("Math", new MathMod("Math"));
             globals.Define("clock", new Clock());
             globals.Define("evalExpr", new EvaluateExpression());
             globals.Define("arr_get", new ArrGet());
@@ -356,7 +357,7 @@ namespace ScarbroScript
                 ScarbroScriptFunction function = new ScarbroScriptFunction(method, enviornment, method.name.lexeme.Equals("init"));
                 methods[method.name.lexeme] = function;
             }
-            ScarbroScriptClass klass = new ScarbroScriptClass(stmt.name.lexeme, methods);
+            ScarbroScriptClass klass = new ScarbroScriptClass(stmt.name.lexeme, methods, null);
             enviornment.Assign(stmt.name, klass);
             return null;
         }

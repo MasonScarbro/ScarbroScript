@@ -10,10 +10,12 @@ namespace ScarbroScript
     {
         public readonly string name;
         public readonly Dictionary<string, ScarbroScriptFunction> methods;
-        public ScarbroScriptClass(string name, Dictionary<string, ScarbroScriptFunction> methods)
+        public readonly Dictionary<string, ScarbroScriptCallable> modMethods;
+        public ScarbroScriptClass(string name, Dictionary<string, ScarbroScriptFunction> methods, Dictionary<string, ScarbroScriptCallable> modMethods)
         {
             this.name = name;
             this.methods = methods;
+            this.modMethods = modMethods;
         }
 
         public Object Call(Interpreter interpreter, List<object> arguments)
@@ -39,6 +41,17 @@ namespace ScarbroScript
             {
                 return func;
             }
+            
+            return null;
+        }
+
+        public ScarbroScriptCallable FindMod(string name)
+        {
+            if (modMethods.TryGetValue(name, out ScarbroScriptCallable fun))
+            {
+                return fun;
+            }
+
             return null;
         }
 

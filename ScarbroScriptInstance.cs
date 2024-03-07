@@ -24,7 +24,13 @@ namespace ScarbroScript
             }
 
             ScarbroScriptFunction method = klass.FindMethod(name.lexeme);
+            if (method == null)
+            {
+                ScarbroScriptCallable mod = klass.FindMod(name.lexeme);
+                if (mod != null) return mod;
+            }
             if (method != null) return method.Bind(this);
+            
 
             throw new RuntimeError(name, "Undefined Property '" + name.lexeme + "'");
         }

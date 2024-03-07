@@ -6,6 +6,36 @@ using System.Threading.Tasks;
 
 namespace ScarbroScript
 {
+
+    public class MathMod : ScarbroScriptClass
+    {
+        public MathMod(string name) : base(name, new Dictionary<string, ScarbroScriptFunction>(), new Dictionary<string, ScarbroScriptCallable>())
+        {
+            // Super 
+            
+            modMethods.Add("cosT", new CosValT());
+            
+        }
+
+        public class CosValT : ScarbroScriptCallable
+        {
+            // Arity is 0 due to no arguments
+            public int Arity { get { return 1; } }
+
+            /// <summary>
+            /// Returns the Cos(x) value
+            /// </summary>
+            /// <param name="interpreter"></param>
+            /// <param name="arguments"></param>
+            /// <returns></returns>
+            public object Call(Interpreter interpreter, List<object> arguments)
+            {
+                return Math.Cos((double)arguments[0]);
+            }
+
+            public override string ToString() => "<native fn>";
+        }
+    }
     class Clock : ScarbroScriptCallable
     {
         //Arity is 0 due to no arguments
