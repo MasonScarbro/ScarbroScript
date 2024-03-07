@@ -353,7 +353,7 @@ namespace ScarbroScript
             Dictionary<string, ScarbroScriptFunction> methods = new Dictionary<string, ScarbroScriptFunction>();
             foreach (Stmt.Function method in stmt.methods)
             {
-                ScarbroScriptFunction function = new ScarbroScriptFunction(method, enviornment);
+                ScarbroScriptFunction function = new ScarbroScriptFunction(method, enviornment, method.name.lexeme.Equals("init"));
                 methods[method.name.lexeme] = function;
             }
             ScarbroScriptClass klass = new ScarbroScriptClass(stmt.name.lexeme, methods);
@@ -482,7 +482,7 @@ namespace ScarbroScript
 
         public object VisitFunctionStmt(Stmt.Function stmt)
         {
-            ScarbroScriptFunction function = new ScarbroScriptFunction(stmt , enviornment);
+            ScarbroScriptFunction function = new ScarbroScriptFunction(stmt , enviornment, false);
             enviornment.Define(stmt.name.lexeme, function);
             return null;
         }

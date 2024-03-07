@@ -113,7 +113,7 @@ namespace ScarbroScript
             }
             else
             {
-                throw new RuntimeError(name, "Undefined variable " + name.lexeme);
+                throw new RuntimeError(name, "Undefined variable " + name.lexeme + "With Index " + index.ToString() + " Does Value exist at index?");
             }
 
         }
@@ -132,7 +132,7 @@ namespace ScarbroScript
             }
             else
             {
-                throw new RuntimeError(name, "Undefined variable " + name.lexeme);
+                throw new RuntimeError(name, "Undefined variable " + name.lexeme + "With Index " + index.ToString() + " Does Value exist at index?");
             }
             
         }

@@ -11,15 +11,20 @@ namespace ScarbroScript
         private readonly Interpreter interpreter;
         private readonly Stack<Dictionary<String, bool>> scopes = new Stack<Dictionary<String, bool>>();
         private FunctionType currentFunction = FunctionType.NONE;
-       
+        private ClassType currentClass = ClassType.NONE;
 
         private enum FunctionType
         {
             NONE,
             FUNCTION,
+            INITIALIZER,
             METHOD
         }
-
+        private enum ClassType
+        {
+            NONE,
+            CLASS
+        }
         public Resolver(Interpreter interpreter)
         {
             this.interpreter = interpreter;
@@ -35,6 +40,9 @@ namespace ScarbroScript
 
         public object VisitClassStmt(Stmt.Class stmt)
         {
+            ClassType enclosingClass = currentClass;
+            currentClass = ClassType.CLASS;
+
             Declare(stmt.name);
             Define(stmt.name);
 
@@ -48,9 +56,14 @@ namespace ScarbroScript
             foreach (Stmt.Function method in stmt.methods)
             {
                 FunctionType declaration = FunctionType.METHOD;
+                if (method.name.lexeme.Equals("init"))
+                {
+                    declaration = FunctionType.INITIALIZER;
+                }
                 ResolveFunction(method, declaration);
             }
-            EndScope(); //discard the scope when done 
+            EndScope(); //discard the scope when done
+            currentClass = enclosingClass;
             return null;
         }
 
@@ -70,6 +83,11 @@ namespace ScarbroScript
 
         public object VisitThisExpr(Expr.This expr)
         {
+            if (currentClass == ClassType.NONE)
+            {
+                ScarbroScript.Error(expr.keyword, "Cant use 'this' keyword outside a class");
+                return null;
+            }
             ResolveLocal(expr, expr.keyword);
             return null;
         }
@@ -147,7 +165,10 @@ namespace ScarbroScript
             {
                 ScarbroScript.Error(stmt.keyword, "Can't return from top-level code.");
             }
-
+            if (currentFunction == FunctionType.INITIALIZER)
+            {
+                ScarbroScript.Error(stmt.keyword, "Can't return from a constructor code.");
+            }
             if (stmt.value != null)
             {
                 Resolve(stmt.value);
