@@ -45,6 +45,7 @@ namespace ScarbroScript
         private Stmt Statement()
         {
             Console.WriteLine("Parsing Statement...");
+            if (Match(TokenType.IMPORT)) return ImportStatement();
             if (Match(TokenType.FOR)) return ForStatement();
             if (Match(TokenType.IF)) return IfStatement();
 
@@ -58,6 +59,14 @@ namespace ScarbroScript
             return ExpressionStatement();
         }
 
+        private Stmt ImportStatement()
+        {
+            var keyword = Previous();
+            var fileName = Consume(TokenType.IDENTIFIER, "Expected file name or path after Import statement");
+            Consume(TokenType.SEMICOLON, "Expected ';' to close the Import statement");
+            return new Stmt.Import(keyword, fileName.lexeme);
+
+        }
 
         private Stmt BreakStatement()
         {

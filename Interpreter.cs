@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ScarbroScript.NativeMods;
+
 
 namespace ScarbroScript
 {
@@ -369,6 +371,22 @@ namespace ScarbroScript
                 return _obj.Get(expr.name);
             }
             throw new RuntimeError(expr.name, "Only Instances have Properties");
+        }
+
+
+        public object VisitImportStmt(Stmt.Import stmt)
+        {
+            string fileName = stmt.fileName;
+            string currentDir = Directory.GetCurrentDirectory();
+            string pth = Path.Combine("C:\\Users\\Admin\\source\\repos\\ScarbroScript\\ScarbroScript\\", fileName + ".scarbro");
+
+            if (File.Exists(pth))
+            {
+                Console.WriteLine("Found File: " + pth.ToString());
+
+                ScarbroScript.ResolveFile(pth);
+            }
+            return null;
         }
 
         public object VisitSetExpr(Expr.Set expr)

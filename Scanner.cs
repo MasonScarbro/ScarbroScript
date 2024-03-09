@@ -12,6 +12,7 @@ namespace ScarbroScript
         private static readonly Dictionary<string, TokenType> keywords = new Dictionary<string, TokenType>
         {
             { "and", TokenType.AND },
+            { "import", TokenType.IMPORT },
             { "class", TokenType.CLASS },
             { "else", TokenType.ELSE },
             { "false", TokenType.FALSE },

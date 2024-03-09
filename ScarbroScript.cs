@@ -28,6 +28,25 @@ namespace ScarbroScript
             }
         }
 
+        public static void ResolveFile(string path)
+        {
+
+            var source = System.IO.File.ReadAllText(path);
+            Scanner scanner = new Scanner(source); //Our own scanner not the built in one (for Java)
+            List<Token> tokens = scanner.ScanTokens();
+            Parser parser = new Parser(tokens);
+            List<Stmt> statements = parser.Parse();
+
+            if (hadError) return;
+
+            var resolver = new Resolver(interpreter);
+            resolver.Resolve(statements);
+
+            if (hadError) return;
+
+            interpreter.Interpret(statements);
+        }
+
         private static void RunFile(String path)
         {
             try

@@ -21,6 +21,8 @@ namespace ScarbroScript
 			T VisitClassStmt(Class stmt);
 
 			T VisitReturnStmt(Return stmt);
+
+			T VisitImportStmt(Import stmt);
 		}
 		public class Block : Stmt
 		{
@@ -203,6 +205,27 @@ namespace ScarbroScript
 
 			public readonly Token keyword;
 			public readonly Expr value;
+
+		}
+
+		public class Import : Stmt
+		{
+			public Import(Token keyword, string fileName)
+			{
+
+				this.keyword = keyword;
+				this.fileName = fileName;
+
+			}
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitImportStmt(this);
+
+			}
+
+			public readonly Token keyword;
+			public readonly string fileName;
 
 		}
 

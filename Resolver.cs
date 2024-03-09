@@ -320,5 +320,10 @@ namespace ScarbroScript
         {
             return null;
         }
+
+        public object VisitImportStmt(Stmt.Import stmt)
+        {
+            return null;
+        }
     }
 }
