@@ -131,6 +131,12 @@ namespace ScarbroScript
             }
         }
 
+        public static void ModuleError(object prblem, string message)
+        {
+            Console.Error.WriteLine(prblem.ToString() + "\n[ Issue with " + message +"]");
+            hadRuntimeError = true;
+        }
+
         public static void RuntimeErrorToCons(RuntimeError error)
         {
             Console.Error.WriteLine(error.ToString() + "\n[line " + error.token.line + "]");
