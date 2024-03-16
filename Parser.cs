@@ -48,7 +48,8 @@ namespace ScarbroScript
             if (Match(TokenType.IMPORT)) return ImportStatement();
             if (Match(TokenType.FOR)) return ForStatement();
             if (Match(TokenType.IF)) return IfStatement();
-
+            if (Match(TokenType.SWITCH)) return SwitchStmt();
+            if (Match(TokenType.CASE)) return CaseStmt();
             if (Match(TokenType.RETURN)) return ReturnStatement();
             if (Match(TokenType.BREAK)) return BreakStatement();
             // if token is a print its obviously of the statement type Print
@@ -82,6 +83,36 @@ namespace ScarbroScript
             }
         }
 
+        private Stmt SwitchStmt()
+        {
+            Consume(TokenType.LEFT_PAREN, "Expected a '(' after and if");
+            Expr comparable = Expression();
+            Consume(TokenType.RIGHT_PAREN, "Expected a ')' after and if condition starting brace '('");
+
+            Stmt thenBranch = Statement();
+            if (thenBranch is Stmt.Block errCheck)
+            {
+                foreach (Stmt stmt in errCheck.statements)
+                {
+                    if (!(stmt is Stmt.Case))
+                    {
+                        Error(Previous(), "Switches must only contain Case Stmts");
+                    }
+                }
+            }
+
+            return new Stmt.Switch(comparable, thenBranch);
+        }
+
+        private Stmt CaseStmt()
+        {
+            Expr condition = Expression();
+            Consume(TokenType.COLON, "Expected ':' after condition of case. Ex: case condition: what to execute ");
+            List<Stmt> thenBranch = new List<Stmt>();
+            thenBranch.Add(Statement());
+            return new Stmt.Case(condition, thenBranch);
+
+        }
 
         private Stmt ForStatement()
         {
@@ -231,7 +262,6 @@ namespace ScarbroScript
 
             while (!Check(TokenType.RIGHT_BRACE) && !IsAtEnd())
             {
-
                 statements.Add(Declaration());
             }
             Console.WriteLine(tokens.ToString());

@@ -21,6 +21,7 @@ namespace ScarbroScript.NativeMods
             modMethods.Add("ceil", new Ceil());
             modMethods.Add("floor", new Floor());
             modMethods.Add("pow", new Pow());
+            modMethods.Add("tes", new Test());
 
         }
 
@@ -219,6 +220,27 @@ namespace ScarbroScript.NativeMods
             public override string ToString() => "<native fn>";
         }
 
+        class Test : ScarbroScriptCallable
+        {
+            //Arity is 0 due to no arguments
+            public int Arity { get { return 2; } }
+
+            /// <summary>
+            /// Returns the Square root(x) value
+            /// </summary>
+            /// <param name="interpreter"></param>
+            /// <param name="arguments"></param>
+            /// <returns></returns>
+            public object Call(Interpreter interpreter, List<Object> arguments)
+            {
+                
+                return this.ToString();
+
+            }
+
+            public override string ToString() => "<native fn>";
+        }
+
         class RandomNum : ScarbroScriptCallable
         {
             //Arity is 0 due to no arguments
@@ -244,6 +266,11 @@ namespace ScarbroScript.NativeMods
     public class MathModI : ScarbroScriptInstance
     {
         public MathModI() : base(new MathMod("Math"))
+        {
+            //Construct
+        }
+
+        public MathModI(string name) : base(new MathMod(name))
         {
             //Construct
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ScarbroScript.NativeMods;
 
 namespace ScarbroScript
 {
@@ -99,6 +100,7 @@ namespace ScarbroScript
 
             throw new RuntimeError(name, "Undefined variable " + name.lexeme);
         }
+
 
         public void IndexAssignAt(int distance, Token name, List<object> index, Object value)
         {

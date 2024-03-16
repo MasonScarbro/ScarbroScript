@@ -111,6 +111,21 @@ namespace ScarbroScript
             return null;
         }
 
+        public object VisitCaseStmt(Stmt.Case stmt)
+        {
+            Resolve(stmt.condition);
+            Resolve(stmt.thenBranch);
+            return null;
+
+        }
+
+        public object VisitSwitchStmt(Stmt.Switch stmt)
+        {
+            Resolve(stmt.comparable);
+            Resolve(stmt.thenBranch);
+            return null;
+        }
+
         public object VisitFunctionStmt(Stmt.Function stmt)
         {
             Declare(stmt.name); // Declare the name 
@@ -325,5 +340,7 @@ namespace ScarbroScript
         {
             return null;
         }
+
+        
     }
 }

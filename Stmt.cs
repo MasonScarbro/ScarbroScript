@@ -22,6 +22,10 @@ namespace ScarbroScript
 
 			T VisitReturnStmt(Return stmt);
 
+			T VisitCaseStmt(Case Stmt);
+
+			T VisitSwitchStmt(Switch Stmt);
+
 			T VisitImportStmt(Import stmt);
 		}
 		public class Block : Stmt
@@ -184,6 +188,50 @@ namespace ScarbroScript
 			public readonly Token name;
 			public readonly List<Stmt.Function> methods;
 			
+
+		}
+
+		public class Case : Stmt
+		{
+			public Case(Expr condition, List<Stmt> thenBranch)
+			{
+
+				this.condition = condition;
+				this.thenBranch = thenBranch;
+				
+			}
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitCaseStmt(this);
+
+			}
+
+			public readonly Expr condition;
+			public readonly List<Stmt> thenBranch;
+			
+
+		}
+
+		public class Switch : Stmt
+		{
+			public Switch(Expr comparable, Stmt thenBranch)
+			{
+
+				this.comparable = comparable;
+				this.thenBranch = thenBranch;
+
+			}
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitSwitchStmt(this);
+
+			}
+
+			public readonly Expr comparable;
+			public readonly Stmt thenBranch;
+
 
 		}
 

@@ -277,7 +277,7 @@ namespace ScarbroScript
             {
                 value = Evaluate(stmt.initializer);
             }
-
+            
             enviornment.Define(stmt.name.lexeme, value);
             return null;
         }
@@ -417,6 +417,35 @@ namespace ScarbroScript
                 Execute(stmt.elseBranch);
             }
             return null;
+        }
+
+        public object VisitCaseStmt(Stmt.Case stmt)
+        {
+            Evaluate(stmt.condition);
+            return null;
+        }
+
+        public object VisitSwitchStmt(Stmt.Switch stmt)
+        {
+            var comparable = Evaluate(stmt.comparable);
+            if (stmt.thenBranch is Stmt.Block blck)
+            {
+                foreach (Stmt.Case kase in blck.statements)
+                {
+                    object condition = Evaluate(kase.condition);
+                    if (condition.Equals(comparable))
+                    {
+                        foreach (Stmt exe in kase.thenBranch)
+                        {
+                            Execute(exe);
+                            
+                        }
+                        
+                    }
+                }
+            }
+            return null;
+
         }
 
         /// <summary>

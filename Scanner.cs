@@ -28,7 +28,9 @@ namespace ScarbroScript
             { "true", TokenType.TRUE },
             { "var", TokenType.VAR },
             { "break", TokenType.BREAK },
-            { "while", TokenType.WHILE }
+            { "while", TokenType.WHILE },
+            { "switch", TokenType.SWITCH },
+            { "case", TokenType.CASE }
         };
 
 
@@ -80,6 +82,7 @@ namespace ScarbroScript
                 case ']': AddToken(TokenType.RIGHT_BRACKET); break;
                 case ',': AddToken(TokenType.COMMA); break;
                 case '.': AddToken(TokenType.DOT); break;
+                case ':': AddToken(TokenType.COLON); break;
                 case '-':
                     AddToken(Match('-') ? TokenType.DECREMENT : TokenType.MINUS);  
                     break;
