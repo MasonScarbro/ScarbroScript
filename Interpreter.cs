@@ -21,6 +21,7 @@ namespace ScarbroScript
         public Interpreter()
         {
             globals.Define("Math", new MathModI());
+            globals.Define("File", new FileModI());
             globals.Define("clock", new Clock());
             globals.Define("evalExpr", new EvaluateExpression());
             globals.Define("arr_get", new ArrGet());
@@ -32,7 +33,6 @@ namespace ScarbroScript
             globals.Define("parseToNum", new ParseToNum());
             globals.Define("parseToString", new ParseToString());
             globals.Define("log", new Log());
-            globals.Define("read", new ReadFromCons());
             globals.Define("matrix", new Matrix());
             
             globals.Define("scarbroNumber", new Random().Next(int.MinValue, int.MaxValue));
@@ -378,7 +378,7 @@ namespace ScarbroScript
         {
             string fileName = stmt.fileName;
             string currentDir = Directory.GetCurrentDirectory();
-            string pth = Path.Combine("C:\\Users\\Admin\\source\\repos\\ScarbroScript\\ScarbroScript\\", fileName + ".scarbro");
+            string pth = Path.Combine(currentDir, fileName + ".scarbro");
 
             if (File.Exists(pth))
             {
@@ -414,7 +414,7 @@ namespace ScarbroScript
             }
             else
             {
-                Execute(stmt.elseBranch);
+                if (stmt.elseBranch != null) Execute(stmt.elseBranch);
             }
             return null;
         }
@@ -447,6 +447,7 @@ namespace ScarbroScript
             return null;
 
         }
+       
 
         /// <summary>
         /// Remmeber that this is dynamically typed
@@ -459,9 +460,43 @@ namespace ScarbroScript
         /// <returns></returns>
         public object VisitLogicalExpr(Expr.Logical expr)
         {
-            Object left = Evaluate(expr.left);
-
+            Object left;
             
+           
+            if (expr.oper.type == TokenType.EXISTS)
+            {
+                try
+                {
+                    left = Evaluate(expr.left);
+                    if (left != null)
+                    {
+                        return true;
+                    }
+                    return false;
+                } catch (NullReferenceException)
+                {
+                    return false;
+                }
+                catch (ArgumentNullException)
+                {
+                    return false;
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    return false;
+                }
+                
+            }
+            left = Evaluate(expr.left);
+            if (expr.oper.type == TokenType.IS)
+            {
+                Object right = Evaluate(expr.right);
+                if (left.GetType() == right.GetType())
+                {
+                    return true;
+                }
+                return false;
+            }
             if (expr.oper.type == TokenType.OR)
             {
                 if (IsTruthy(left)) return left;
@@ -471,7 +506,7 @@ namespace ScarbroScript
                 if (!IsTruthy(left)) return left;
             }
 
-            return Evaluate(expr.right);
+            return Evaluate(expr.right); ;
         }
 
         public object VisitWhileStmt(Stmt.While stmt)

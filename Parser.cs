@@ -323,9 +323,33 @@ namespace ScarbroScript
 
         private Expr And()
         {
-            Expr expr = Equality();
+            Expr expr = Exists();
 
             while (Match(TokenType.AND))
+            {
+                Token oper = Previous();
+                Expr right = Equality();
+                expr = new Expr.Logical(expr, oper, right);
+            }
+            return expr;
+        }
+        private Expr Exists()
+        {
+            Expr expr = Is();
+
+            while (Match(TokenType.EXISTS))
+            {
+                Token oper = Previous();
+                Expr right = null;
+                expr = new Expr.Logical(expr, oper, right);
+            }
+            return expr;
+        }
+        private Expr Is()
+        {
+            Expr expr = Equality();
+
+            while (Match(TokenType.IS))
             {
                 Token oper = Previous();
                 Expr right = Equality();
@@ -678,7 +702,6 @@ namespace ScarbroScript
             return tokens[current - 1];
         }
 
-        
       
 
         private bool IsInsideLoop()

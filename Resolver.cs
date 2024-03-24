@@ -236,7 +236,11 @@ namespace ScarbroScript
         public object VisitLogicalExpr(Expr.Logical expr)
         {
             Resolve(expr.left);
-            Resolve(expr.right);
+            if (expr.right != null)
+            {
+                Resolve(expr.right);
+            }
+            
             return null;
         }
 

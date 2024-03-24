@@ -30,7 +30,10 @@ namespace ScarbroScript
             { "break", TokenType.BREAK },
             { "while", TokenType.WHILE },
             { "switch", TokenType.SWITCH },
-            { "case", TokenType.CASE }
+            { "case", TokenType.CASE },
+            { "is", TokenType.IS },
+            { "exists", TokenType.EXISTS }
+
         };
 
 

@@ -91,27 +91,7 @@ namespace ScarbroScript
         public override string ToString() => "<native fn>";
     }
 
-    class ReadFromCons : ScarbroScriptCallable
-    {
-        //Arity is 0 due to no arguments
-        public int Arity { get { return 0; } }
-
-        /// <summary>
-        ///  Reads from the console
-        /// </summary>
-        /// <param name="interpreter"></param>
-        /// <param name="arguments"></param>
-        /// <returns></returns>
-        public object Call(Interpreter interpreter, List<Object> arguments)
-        {
-            
-            String input = Console.ReadLine();
-            return input;
-
-        }
-
-        public override string ToString() => "<native fn>";
-    }
+    
 
 
     class Matrix : ScarbroScriptCallable
@@ -393,7 +373,7 @@ namespace ScarbroScript
                 It is only in the last few hundred years that the English language has been standardized. For that reason, early Anglo-Saxon surnames like Scarbro are characterized by many spelling variations. As the English language changed and incorporated elements of other European languages, even literate people changed the spelling of their names. The variations of the name Scarbro include: Scarbrough, Scarboro, Scarborough, Scasbridge, Scarbrow, Scarburg, Scarburgh, Scarsbridge and many more.
 
                 There are currently only 107 people with the surname Scarbro Alive Today. The Author, Of this Lang: Mason Scarbro Is one Of them!" +
-                "Mason Scarbro, Creator of this language and Mediocare Developer, \n" +
+                "Mason Scarbro, Creator of this language and Mediocre Developer, \n" +
                 "Born July 7th 2003, \n" +
                 "[July 7th 2003, 5:06am]: Mason escapes his mothers canal \n" +
                 "[July 7th 2004-2009]: Mason has infintile amnesia from these points thus memories cannot be processed \n" +
