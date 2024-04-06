@@ -8,6 +8,8 @@ namespace ScarbroScript.NativeMods
 {
     public class MathMod : ScarbroScriptClass
     {
+        public static object context = null;
+        
         public MathMod(string name) : base(name, new Dictionary<string, ScarbroScriptFunction>(), new Dictionary<string, ScarbroScriptCallable>())
         {
             // Super 
@@ -22,10 +24,11 @@ namespace ScarbroScript.NativeMods
             modMethods.Add("floor", new Floor());
             modMethods.Add("pow", new Pow());
             modMethods.Add("tes", new Test());
+            
 
         }
 
-        class SinVal : ScarbroScriptCallable
+        public class SinVal : ScarbroScriptCallable
         {
             //Arity is 0 due to no arguments
             public int Arity { get { return 1; } }
@@ -40,6 +43,7 @@ namespace ScarbroScript.NativeMods
             {
 
                 return Math.Sin((double)arguments[0]);
+                
 
             }
 

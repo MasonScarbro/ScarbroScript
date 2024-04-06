@@ -35,7 +35,7 @@ namespace ScarbroScript.NativeMods
 
                 String input = Console.ReadLine();
                 return input;
-
+                
             }
 
             public override string ToString() => "<native fn>";

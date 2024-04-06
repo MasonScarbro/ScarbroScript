@@ -366,6 +366,14 @@ namespace ScarbroScript
         public object VisitAccessExpr(Expr.Access expr)
         {
             object obj = Evaluate(expr.obj);
+            
+            // here we will check if the value is a string instead of only an instance!
+            if (obj is string stobj)
+            {
+
+                obj = new NativeMods.StringModRunValueI(stobj);
+
+            }
             if (obj is ScarbroScriptInstance _obj)
             {
                 return _obj.Get(expr.name);
@@ -725,7 +733,7 @@ namespace ScarbroScript
 
             }
 
-            throw new RuntimeError(name, "There Was An Error Interpreting The " + name.lexeme + "at index");
+            throw new RuntimeError(name, "There Was An Error Interpreting The " + name.lexeme);
             return null;
 
         }

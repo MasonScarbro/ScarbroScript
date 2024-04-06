@@ -27,6 +27,7 @@ namespace ScarbroScript
             if (method == null)
             {
                 ScarbroScriptCallable mod = klass.FindMod(name.lexeme);
+                
                 if (mod != null) return mod;
             }
             if (method != null) return method.Bind(this);

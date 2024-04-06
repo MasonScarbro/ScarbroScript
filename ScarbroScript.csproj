@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AstPrinter.cs" />
+    <Compile Include="NativeMods\StringModRunValue.cs" />
     <Compile Include="NativeMods\IOMod.cs" />
     <Compile Include="NativeMods\MathMod.cs" />
     <Compile Include="ScarbroScriptInstance.cs" />
