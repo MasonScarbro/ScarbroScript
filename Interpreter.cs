@@ -371,8 +371,12 @@ namespace ScarbroScript
             if (obj is string stobj)
             {
 
-                obj = new NativeMods.StringModRunValueI(stobj);
+                obj = new StringModRunValueI(stobj);
 
+            }
+            if (obj is List<object> aobj)
+            {
+                obj = new ArrayModRunValueI(aobj);
             }
             if (obj is ScarbroScriptInstance _obj)
             {
