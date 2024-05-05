@@ -459,7 +459,18 @@ namespace ScarbroScript
             return null;
 
         }
-       
+
+
+        public object VisitTernaryExpr(Expr.Ternary expr)
+        {
+            object condition = Evaluate(expr.condition);
+            object left = Evaluate(expr.left);
+            object right = Evaluate(expr.right);
+
+            if ((bool)condition) return left;
+            //else
+            return right;
+        }
 
         /// <summary>
         /// Remmeber that this is dynamically typed

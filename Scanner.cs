@@ -85,6 +85,7 @@ namespace ScarbroScript
                 case ']': AddToken(TokenType.RIGHT_BRACKET); break;
                 case ',': AddToken(TokenType.COMMA); break;
                 case '.': AddToken(TokenType.DOT); break;
+                case '?': AddToken(TokenType.TERNARY); break;
                 case ':': AddToken(TokenType.COLON); break;
                 case '-':
                     AddToken(Match('-') ? TokenType.DECREMENT : TokenType.MINUS);  

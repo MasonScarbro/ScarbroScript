@@ -345,6 +345,12 @@ namespace ScarbroScript
             return null;
         }
 
-        
+        public object VisitTernaryExpr(Expr.Ternary expr)
+        {
+            Resolve(expr.condition);
+            Resolve(expr.left);
+            Resolve(expr.right);
+            return null;
+        }
     }
 }

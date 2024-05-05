@@ -12,6 +12,8 @@ namespace ScarbroScript
 			T VisitGroupingExpr(Grouping expr);
 			T VisitLiteralExpr(Literal expr);
 			T VisitLogicalExpr(Logical expr);
+
+			T VisitTernaryExpr(Ternary expr);
 			T VisitUnaryExpr(Unary expr);
 			T VisitVariableExpr(Variable expr);
 			T VisitArrayExpr(Array expr);
@@ -109,6 +111,26 @@ namespace ScarbroScript
 
 			public readonly Expr left;
 			public readonly Token oper;
+			public readonly Expr right;
+		}
+
+		public class Ternary : Expr
+		{
+			public Ternary(Expr condition, Expr left, Expr right)
+			{
+				this.condition = condition;
+				this.left = left;
+				this.right = right;
+			}
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitTernaryExpr(this);
+
+			}
+
+			public readonly Expr condition;
+			public readonly Expr left;
 			public readonly Expr right;
 		}
 		public class Unary : Expr

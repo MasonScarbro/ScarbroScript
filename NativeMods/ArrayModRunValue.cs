@@ -9,7 +9,7 @@ namespace ScarbroScript.NativeMods
     class ArrayModRunValue : ScarbroScriptClass
     {
         public static object context = null;
-
+        
         public ArrayModRunValue(string name) : base(name, new Dictionary<string, ScarbroScriptFunction>(), new Dictionary<string, ScarbroScriptCallable>())
         {
             // Super 
@@ -26,7 +26,7 @@ namespace ScarbroScript.NativeMods
             modMethods.Add("concat", new Concat());
         }
 
-
+       
         public class SizeOf : ScarbroScriptCallable
         {
             //Arity is 0 due to no arguments
@@ -43,6 +43,7 @@ namespace ScarbroScript.NativeMods
                 if (ArrayModRunValue.context != null && context is List<object> val)
                 {
                     var len = val.Count;
+                    
                     ArrayModRunValue.context = null;
                     return len;
                 }

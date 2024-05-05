@@ -57,6 +57,12 @@ namespace ScarbroScript
             if (expr.value == null) return "nil";
             return expr.value.ToString();
         }
+
+        public string VisitTernaryExpr(Expr.Ternary expr)
+        {
+            throw new NotImplementedException();
+        }
+
         public String VisitUnaryExpr(Expr.Unary expr)
         {
             return Parenthesize(expr.oper.lexeme, expr.right);

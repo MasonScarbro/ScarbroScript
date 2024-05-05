@@ -428,7 +428,7 @@ namespace ScarbroScript
 
         private Expr Equality()
         {
-            Expr expr = Comparable();
+            Expr expr = Ternary();
 
             while (Match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL))
             {
@@ -439,6 +439,21 @@ namespace ScarbroScript
 
 
             return expr;
+        }
+
+        private Expr Ternary()
+        {
+            Expr expr = Comparable();
+
+            while (Match(TokenType.TERNARY))
+            {
+                Expr left = Term();
+                Consume(TokenType.COLON, "Expected ':' after initial term? Ternarys need an ''else''");
+                Expr right = Term();
+                expr = new Expr.Ternary(expr, left, right);
+            }
+            return expr;
+
         }
 
         private Expr Comparable()
@@ -455,6 +470,8 @@ namespace ScarbroScript
 
             return expr;
         }
+
+
 
         private Expr Term()
         {
