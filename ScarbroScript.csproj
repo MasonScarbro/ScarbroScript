@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="AstPrinter.cs" />
     <Compile Include="NativeMods\ArrayModRunValue.cs" />
+    <Compile Include="NativeMods\ExceptionInstance.cs" />
     <Compile Include="NativeMods\StringModRunValue.cs" />
     <Compile Include="NativeMods\IOMod.cs" />
     <Compile Include="NativeMods\MathMod.cs" />

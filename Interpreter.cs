@@ -431,6 +431,22 @@ namespace ScarbroScript
             return null;
         }
 
+
+        public object VisitTryCatchStmt(Stmt.TryCatch stmt)
+        {
+            try
+            {
+                Execute(stmt.tryBranch);
+            } catch (Exception e)
+            {
+                var exe = new ExceptionInstanceI(stmt.instance.lexeme, e);
+                enviornment.Define(stmt.instance.lexeme, exe);
+                Execute(stmt.catchBranch);
+                enviornment.Destroy(stmt.instance); // destroyed since not declared inside
+            }
+            return null;
+        }
+
         public object VisitCaseStmt(Stmt.Case stmt)
         {
             Evaluate(stmt.condition);

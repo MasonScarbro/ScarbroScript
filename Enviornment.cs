@@ -120,6 +120,8 @@ namespace ScarbroScript
 
         }
 
+
+
         public void IndexAssign(Token name, List<object> index, Object value)
         {
 
@@ -137,6 +139,23 @@ namespace ScarbroScript
                 throw new RuntimeError(name, "Undefined variable " + name.lexeme + "With Index " + index.ToString() + " Does Value exist at index?");
             }
             
+        }
+
+
+        public void DestroyAt(int distance, Token name)
+        {
+            if (values.ContainsKey(name.lexeme))
+            {
+                Ancestor(distance).values.Remove(name.lexeme);
+            }
+        }
+
+        public void Destroy(Token name)
+        {
+            if (values.ContainsKey(name.lexeme))
+            {
+                values.Remove(name.lexeme);
+            }
         }
 
     }

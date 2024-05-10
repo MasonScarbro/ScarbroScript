@@ -32,7 +32,9 @@ namespace ScarbroScript
             { "switch", TokenType.SWITCH },
             { "case", TokenType.CASE },
             { "is", TokenType.IS },
-            { "exists", TokenType.EXISTS }
+            { "exists", TokenType.EXISTS },
+            { "try", TokenType.TRY },
+            { "catch", TokenType.CATCH }
 
         };
 

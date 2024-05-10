@@ -48,6 +48,7 @@ namespace ScarbroScript
             if (Match(TokenType.IMPORT)) return ImportStatement();
             if (Match(TokenType.FOR)) return ForStatement();
             if (Match(TokenType.IF)) return IfStatement();
+            if (Match(TokenType.TRY)) return TryCatchStatement();
             if (Match(TokenType.SWITCH)) return SwitchStmt();
             if (Match(TokenType.CASE)) return CaseStmt();
             if (Match(TokenType.RETURN)) return ReturnStatement();
@@ -175,6 +176,19 @@ namespace ScarbroScript
                 body = new Stmt.Block(stmts);
             }
             return body;
+        }
+
+
+        private Stmt TryCatchStatement()
+        {
+            Stmt tryBlock = Statement();
+            Consume(TokenType.CATCH, "You Must Provide a 'catch' after each try statement");
+            Consume(TokenType.LEFT_PAREN, "Instance must be wrapped in parentheses you are missing '('");
+            Token exc = Consume(TokenType.IDENTIFIER, "Please Supply an Instance for the Exception, Expectes an Identifier");
+            Consume(TokenType.RIGHT_PAREN, "Instance must be wrapped in parentheses you are missing ')'");
+            Stmt catchBlock = Statement();
+            
+            return new Stmt.TryCatch(tryBlock, exc, catchBlock);
         }
 
         private Stmt IfStatement()

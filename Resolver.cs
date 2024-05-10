@@ -251,6 +251,33 @@ namespace ScarbroScript
             return null;
         }
 
+
+        public object VisitArrayExpr(Expr.Array expr)
+        {
+            Resolve(expr.elements);
+            return null;
+        }
+
+        public object VisitImportStmt(Stmt.Import stmt)
+        {
+            return null;
+        }
+
+        public object VisitTernaryExpr(Expr.Ternary expr)
+        {
+            Resolve(expr.condition);
+            Resolve(expr.left);
+            Resolve(expr.right);
+            return null;
+        }
+
+        public object VisitTryCatchStmt(Stmt.TryCatch stmt)
+        {
+            Resolve(stmt.tryBranch);
+            Resolve(stmt.catchBranch);
+            return null;
+        }
+
         //------- End Other Visits -------//
 
         public void Resolve(List<Stmt> statements)
@@ -265,6 +292,15 @@ namespace ScarbroScript
         private void Resolve(Stmt stmt)
         {
             stmt.Accept(this);
+        }
+
+        private void Resolve(List<Expr> exprs)
+        {
+            foreach (Expr expr in exprs)
+            {
+                Resolve(expr);
+            }
+            
         }
 
         //Overloaded (Expr), Basically the Evaluate function in interpreter
@@ -335,22 +371,6 @@ namespace ScarbroScript
 
         }
 
-        public object VisitArrayExpr(Expr.Array expr)
-        {
-            return null;
-        }
-
-        public object VisitImportStmt(Stmt.Import stmt)
-        {
-            return null;
-        }
-
-        public object VisitTernaryExpr(Expr.Ternary expr)
-        {
-            Resolve(expr.condition);
-            Resolve(expr.left);
-            Resolve(expr.right);
-            return null;
-        }
+        
     }
 }

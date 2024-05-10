@@ -10,6 +10,8 @@ namespace ScarbroScript
 			T VisitBlockStmt(Block stmt);
 			T VisitExpressionStmt(Expression stmt);
 			T VisitIfStmt(If stmt);
+
+			T VisitTryCatchStmt(TryCatch stmt);
 			T VisitPrintStmt(Print stmt);
 			T VisitVarStmt(Var stmt);
 			T VisitWhileStmt(While stmt);
@@ -79,6 +81,29 @@ namespace ScarbroScript
 			public readonly Stmt thenBranch;
 			public readonly Stmt elseBranch;
 		}
+
+		public class TryCatch : Stmt
+		{
+			public TryCatch(Stmt tryBranch, Token instance, Stmt catchBranch)
+			{
+				
+				this.tryBranch = tryBranch;
+				this.instance = instance;
+				this.catchBranch = catchBranch;
+			}
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitTryCatchStmt(this);
+
+			}
+
+			
+			public readonly Stmt tryBranch;
+			public readonly Token instance;
+			public readonly Stmt catchBranch;
+		}
+
 		public class Print : Stmt
 		{
 			public Print(Expr expression) 
@@ -110,6 +135,9 @@ namespace ScarbroScript
 
 			public readonly Token name;
 			public readonly Expr initializer;
+
+
+			
 		}
 		public class While : Stmt
 		{

@@ -16,8 +16,11 @@ namespace ScarbroScript.NativeMods
         {
             // Super 
             modMethods.Add("readln", new ReadFromCons());
+            
+
 
         }
+
 
         class ReadFromCons : ScarbroScriptCallable
         {
@@ -33,8 +36,8 @@ namespace ScarbroScript.NativeMods
             public object Call(Interpreter interpreter, List<Object> arguments)
             {
 
-                String input = Console.ReadLine();
-                return input;
+                Exception input = new Exception();
+                return input.Message;
                 
             }
 
@@ -53,6 +56,8 @@ namespace ScarbroScript.NativeMods
             modMethods.Add("write", new WriteTo());
             modMethods.Add("read", new ReadIn());
             modMethods.Add("readlns", new ReadInLine());
+            modMethods.Add("mv", new MoveFile());
+            modMethods.Add("rm", new RemoveFile());
 
         }
 
