@@ -17,6 +17,7 @@ namespace ScarbroScript
             { "else", TokenType.ELSE },
             { "false", TokenType.FALSE },
             { "for", TokenType.FOR },
+            { "foreach", TokenType.FOREACH },
             { "fun", TokenType.FUN },
             { "if", TokenType.IF },
             { "nil", TokenType.NIL },

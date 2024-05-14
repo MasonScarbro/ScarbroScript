@@ -111,7 +111,7 @@ namespace ScarbroScript
 
         private void CheckNumberOperands(Token oper, Object left, Object right)
         {
-            if (left.GetType() == typeof(double) && right.GetType() == typeof(double)) return;
+            if (left is double || left is int && right is double || right is int) return;
             //else
             throw new RuntimeError(oper, "Operands Must be Numbers!");
         }
@@ -562,6 +562,30 @@ namespace ScarbroScript
                 //Breaks out of the loop, Not very pretty but it works
             }
             
+            return null;
+        }
+
+        public object VisitForEachStmt(Stmt.ForEach stmt)
+        {
+            //for each stmt.initializer
+            //assign it the current index of stmt.arr 
+            var obj = Evaluate(stmt.arr);
+            Console.WriteLine(stmt.initializer.GetType());
+            Execute(stmt.initializer);
+            if (obj is List<object> arr)
+            {
+                foreach (var b in arr)
+                {
+                    if (stmt.initializer is Stmt.Var stmtv)
+                    {
+                        
+                        enviornment.Assign(stmtv.name, b);
+                    }
+                    Execute(stmt.body);
+                }
+
+                
+            }
             return null;
         }
 

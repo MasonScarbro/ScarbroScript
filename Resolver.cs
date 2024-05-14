@@ -278,6 +278,13 @@ namespace ScarbroScript
             return null;
         }
 
+        public object VisitForEachStmt(Stmt.ForEach stmt)
+        {
+            Resolve(stmt.arr);
+            Resolve(stmt.initializer);
+            return null;
+        }
+
         //------- End Other Visits -------//
 
         public void Resolve(List<Stmt> statements)
@@ -302,6 +309,8 @@ namespace ScarbroScript
             }
             
         }
+
+
 
         //Overloaded (Expr), Basically the Evaluate function in interpreter
         private void Resolve(Expr expr)

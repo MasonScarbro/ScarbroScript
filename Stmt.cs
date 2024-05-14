@@ -15,7 +15,7 @@ namespace ScarbroScript
 			T VisitPrintStmt(Print stmt);
 			T VisitVarStmt(Var stmt);
 			T VisitWhileStmt(While stmt);
-
+			T VisitForEachStmt(ForEach stmt);
 			T VisitBreakStmt(Break stmt);
 
 			T VisitFunctionStmt(Function stmt);
@@ -157,6 +157,28 @@ namespace ScarbroScript
 			public readonly Expr condition;
 			public readonly Stmt body;
 		}
+
+		public class ForEach : Stmt
+		{
+			public ForEach(Stmt initializer, Expr arr, Stmt body)
+			{
+				this.initializer = initializer;
+				this.arr = arr;
+				this.body = body;
+
+			}
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitForEachStmt(this);
+
+			}
+
+			public readonly Stmt initializer;
+			public readonly Expr arr;
+			public readonly Stmt body;
+		}
+
 
 		public class Break : Stmt
 		{

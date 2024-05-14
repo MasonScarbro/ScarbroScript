@@ -47,6 +47,7 @@ namespace ScarbroScript
             Console.WriteLine("Parsing Statement...");
             if (Match(TokenType.IMPORT)) return ImportStatement();
             if (Match(TokenType.FOR)) return ForStatement();
+            if (Match(TokenType.FOREACH)) return ForEachStatement();
             if (Match(TokenType.IF)) return IfStatement();
             if (Match(TokenType.TRY)) return TryCatchStatement();
             if (Match(TokenType.SWITCH)) return SwitchStmt();
@@ -176,6 +177,27 @@ namespace ScarbroScript
                 body = new Stmt.Block(stmts);
             }
             return body;
+        }
+
+
+        private Stmt ForEachStatement()
+        {
+            Consume(TokenType.LEFT_PAREN, "Expected a '(' after for");
+            loopDepth++;
+            Stmt initializer = null;
+            if (Match(TokenType.VAR))
+            {
+                initializer = VarDeclaration();
+            }
+            Consume(TokenType.COLON, "Needed the ':' for the in operation");
+            Expr arr = Primary();
+            Consume(TokenType.RIGHT_PAREN, "Expected a ')' after for");
+            Stmt body = Statement();
+
+            return new Stmt.ForEach(initializer, arr, body);
+            
+
+
         }
 
 

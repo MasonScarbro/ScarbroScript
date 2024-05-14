@@ -42,7 +42,7 @@ namespace ScarbroScript.NativeMods
             {
                 if (ArrayModRunValue.context != null && context is List<object> val)
                 {
-                    var len = val.Count;
+                    var len = (double)val.Count;
                     
                     ArrayModRunValue.context = null;
                     return len;
