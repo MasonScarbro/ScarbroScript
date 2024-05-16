@@ -189,7 +189,7 @@ namespace ScarbroScript
             {
                 initializer = VarDeclaration();
             }
-            Consume(TokenType.COLON, "Needed the ':' for the in operation");
+            Consume(TokenType.COLON, "Needed the ':' for the in operation of a foreach stmt");
             Expr arr = Primary();
             Consume(TokenType.RIGHT_PAREN, "Expected a ')' after for");
             Stmt body = Statement();
@@ -458,7 +458,7 @@ namespace ScarbroScript
                 intializer = Expression();
             }
 
-            Consume(TokenType.SEMICOLON, "Expected ';' after your variable declaration");
+            ConsumeEither(TokenType.SEMICOLON, TokenType.FOREACH , "Expected ';' after your variable declaration");
             return new Stmt.Var(name, intializer);
         }
 
@@ -695,6 +695,28 @@ namespace ScarbroScript
 
         }
 
+        /// <summary>
+        /// This is just Consume but for specific edge cases where syntax would be nicer 
+        /// with syntax like foreach
+        /// </summary>
+        /// <param name="type1"></param>
+        /// <param name="type2"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        private Token ConsumeEither(TokenType type1, TokenType type2, string message)
+        {
+            //foreach syntax
+            if (Check(type1) || (LookBack(4).type == type2))
+            {
+                current--; 
+                return Advance();
+            }
+            
+            if (Check(type1) || Check(type2)) return Advance();
+
+            throw Error(Peek(), message);
+        }
+
         private ParseError Error(Token token, String message)
         {
             Console.WriteLine($"Parser Error at line {token.line}: {message}");
@@ -756,6 +778,10 @@ namespace ScarbroScript
         }
 
       
+        private Token LookBack(int numOfTokensBack)
+        {
+            return tokens[current - numOfTokensBack];
+        }
 
         private bool IsInsideLoop()
         {

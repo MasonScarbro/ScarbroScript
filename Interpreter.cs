@@ -572,6 +572,7 @@ namespace ScarbroScript
             var obj = Evaluate(stmt.arr);
             Console.WriteLine(stmt.initializer.GetType());
             Execute(stmt.initializer);
+            Token context = getClosestToken(stmt.initializer);
             if (obj is List<object> arr)
             {
                 foreach (var b in arr)
@@ -580,11 +581,21 @@ namespace ScarbroScript
                     {
                         
                         enviornment.Assign(stmtv.name, b);
+                        context = stmtv.name;
+                    }
+                    else
+                    {
+                        throw new RuntimeError(context, "");
                     }
                     Execute(stmt.body);
                 }
-
                 
+                //destroy variable outside of block
+                enviornment.Destroy(context);
+            }
+            else
+            {
+                throw new RuntimeError(context, "Your variable must be an array in the forEach loop!");
             }
             return null;
         }
@@ -798,6 +809,14 @@ namespace ScarbroScript
             locals.Add(expr, depth);
         }
 
+
+        public Token getClosestToken(Stmt stmt)
+        {
+            if (stmt is Stmt.Var stmtv) return stmtv.name;
+            if (stmt is Stmt.TryCatch stmtrc) return stmtrc.instance;
+            if (stmt is Stmt.Function stmtf) return stmtf.name;
+            return new Token();
+        }
         
     }
 }
