@@ -392,11 +392,58 @@ namespace ScarbroScript
             string currentDir = Directory.GetCurrentDirectory();
             string pth = Path.Combine(currentDir, fileName + ".scarbro");
 
+            try
+            {
+                //for filename being a folder not a fileName
+                string[] directoriesInCurrentDirectory = Directory.GetDirectories(Environment.CurrentDirectory, fileName, SearchOption.TopDirectoryOnly);
+
+                if (directoriesInCurrentDirectory.Length > 0)
+                {
+                    Console.WriteLine($"Folder '{fileName}' found in the current directory:");
+                    foreach (string directory in directoriesInCurrentDirectory)
+                    {
+                        if (directory.Contains(fileName)) fileName = directory;
+                        continue;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //Console.WriteLine("Not A File: " + e.Message);
+            }
+            
+
+
             if (File.Exists(pth))
             {
                 Console.WriteLine("Found File: " + pth.ToString());
 
                 ScarbroScript.ResolveFile(pth);
+            }
+            else if (Directory.Exists(fileName)) // if its in fact NOT a file name
+            {
+                string[] filePths = Directory.GetFiles(Path.Combine(fileName));
+                var mainFile = "";
+                Queue<object> executeQueue = new Queue<object>();
+                foreach (var file in filePths)
+                {
+                    if (Path.GetExtension(file) == ".scarbro")
+                    {
+                        
+                        
+                        if (file.Contains("main"))
+                        {
+                            mainFile = file;
+                            if (executeQueue.Contains(mainFile)) executeQueue.Dequeue();
+                        }
+                        
+                    }
+                }
+                if (mainFile != null || mainFile != "") executeQueue.Enqueue(mainFile);
+                foreach (var filepth in executeQueue)
+                {
+                    ScarbroScript.ResolveFile(filepth.ToString());
+                }
             }
             return null;
         }

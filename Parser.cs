@@ -65,7 +65,7 @@ namespace ScarbroScript
         private Stmt ImportStatement()
         {
             var keyword = Previous();
-            var fileName = Consume(TokenType.IDENTIFIER, "Expected file name or path after Import statement");
+            var fileName = ConsumeEither(TokenType.IDENTIFIER, TokenType.STRING, "Expected file name or path after Import statement");
             Consume(TokenType.SEMICOLON, "Expected ';' to close the Import statement");
             return new Stmt.Import(keyword, fileName.lexeme);
 

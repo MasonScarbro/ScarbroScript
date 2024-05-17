@@ -96,7 +96,7 @@ namespace ScarbroScript
 
                 Resolver resolver = new Resolver(interpreter);
                 resolver.Resolve(statements);
-                PrettyPrintAST.ASTPrint(statements);
+                //PrettyPrintAST.ASTPrint(statements);
                 interpreter.Interpret(statements);
                 //Console.WriteLine(new AstPrinter().Print(expression));
 
