@@ -611,6 +611,28 @@ namespace ScarbroScript
             return new Expr.Array(bracket, elements);
         }
 
+        private Expr Dict()
+        {
+            Expr key;
+            Expr value;
+            List<Expr> elements = new List<Expr>();
+            // checks for no arguments!
+            if (!Check(TokenType.RIGHT_BRACKET))
+            {
+                do
+                {
+                    key = (Expression());
+                    Consume(TokenType.COLON, "Needs a Colon After a key");
+                    value = Expression();
+                    elements.Add(new Expr.KeyValue(key, value));
+                } while (Match(TokenType.COMMA));
+
+            }
+            Consume(TokenType.RIGHT_BRACE, "Expected '}' After arguments");
+
+            return new Expr.Dict(elements);
+        }
+
         private Expr Primary()
         {
             if (Match(TokenType.FALSE)) return new Expr.Literal(false);
@@ -652,6 +674,11 @@ namespace ScarbroScript
             if (Match(TokenType.LEFT_BRACKET))
             {
                 return Array();
+            }
+
+            if (Match(TokenType.LEFT_BRACE))
+            {
+                return Dict();
             }
 
             throw Error(Peek(), "Expect Expression");
@@ -706,7 +733,7 @@ namespace ScarbroScript
         private Token ConsumeEither(TokenType type1, TokenType type2, string message)
         {
             //foreach syntax
-            if (Check(type1) || (LookBack(4).type == type2))
+            if ((LookBack(4).type == type2))
             {
                 current--; 
                 return Advance();

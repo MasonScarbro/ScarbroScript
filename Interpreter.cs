@@ -21,6 +21,8 @@ namespace ScarbroScript
         public Interpreter()
         {
             globals.Define("Math", new MathModI());
+            globals.Define("Dict", new KVMod("Dict"));
+            globals.Define("Interope", new InteropabilityModI());
             globals.Define("File", new FileModI());
             globals.Define("clock", new Clock());
             globals.Define("evalExpr", new EvaluateExpression());
@@ -76,6 +78,10 @@ namespace ScarbroScript
             return Evaluate(expr.expression);
         }
 
+        public object VisitKeyValueExpr(Expr.KeyValue expr)
+        {
+            return (Evaluate(expr.key), Evaluate(expr.value));
+        }
 
         public Object VisitUnaryExpr(Expr.Unary expr)
         {
@@ -366,8 +372,15 @@ namespace ScarbroScript
         public object VisitAccessExpr(Expr.Access expr)
         {
             object obj = Evaluate(expr.obj);
-            
-            // here we will check if the value is a string instead of only an instance!
+
+            // Specific Instances
+            if (obj is KVModI)
+            {
+                KVModI kvobj = new KVModI();
+                obj = kvobj.GetContext();
+            }
+
+            //Run value Instances
             if (obj is string stobj)
             {
 
@@ -378,6 +391,11 @@ namespace ScarbroScript
             {
                 obj = new ArrayModRunValueI(aobj);
             }
+            if (obj is Dictionary<object, object> dobj)
+            {
+                obj = new KVModI(dobj);
+            }
+            // Normal Instance
             if (obj is ScarbroScriptInstance _obj)
             {
                 return _obj.Get(expr.name);
@@ -699,6 +717,30 @@ namespace ScarbroScript
             return evalArr;
         }
 
+        
+
+        public object VisitDictExpr(Expr.Dict expr)
+        {
+            Dictionary<object, object> dict = new Dictionary<object, object>();
+            foreach (Expr element in expr.elements)
+            {
+                if (element is Expr.KeyValue keyValueExpr)
+                {
+                    var result = VisitKeyValueExpr(keyValueExpr);
+                    if (result is ValueTuple<object, object> tuple)
+                    {
+                        var (key, value) = tuple;
+                        dict.Add(key, value);
+                    }
+                    
+                }
+                //else
+                
+
+            }
+            return dict;
+        }
+
         public object VisitReturnStmt(Stmt.Return stmt)
         {
             Object value = null;
@@ -864,6 +906,7 @@ namespace ScarbroScript
             if (stmt is Stmt.Function stmtf) return stmtf.name;
             return new Token();
         }
+
         
     }
 }

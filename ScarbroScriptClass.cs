@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ScarbroScript.NativeMods;
 
 namespace ScarbroScript
 {
@@ -26,8 +27,10 @@ namespace ScarbroScript
 
         public Object Call(Interpreter interpreter, List<object> arguments)
         {
+            
             ScarbroScriptInstance instance = new ScarbroScriptInstance(this);
             ScarbroScriptFunction initializer = FindMethod("init");
+            if (this.name == "Dict") instance = new KVModI();
             /// <summary>
             /// When a class is called, after the ScarbroScriptInstance is created,
             /// we look for an “init” method. 

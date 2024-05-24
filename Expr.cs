@@ -10,6 +10,8 @@ namespace ScarbroScript
 			T VisitAssignExpr(Assign expr);
 			T VisitBinaryExpr(Binary expr);
 			T VisitGroupingExpr(Grouping expr);
+
+			T VisitKeyValueExpr(KeyValue expr);
 			T VisitLiteralExpr(Literal expr);
 			T VisitLogicalExpr(Logical expr);
 
@@ -17,6 +19,8 @@ namespace ScarbroScript
 			T VisitUnaryExpr(Unary expr);
 			T VisitVariableExpr(Variable expr);
 			T VisitArrayExpr(Array expr);
+
+			T VisitDictExpr(Dict expr);
 			T VisitCallExpr(Call expr);
 
 			T VisitAccessExpr(Access expr);
@@ -79,6 +83,24 @@ namespace ScarbroScript
 
 			public readonly Expr expression;
 		}
+
+		public class KeyValue : Expr
+		{
+			public KeyValue(Expr key, Expr value)
+			{
+				this.key = key;
+				this.value = value;
+			}
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitKeyValueExpr(this);
+
+			}
+
+			public readonly Expr key;
+			public readonly Expr value;
+		}
+
 		public class Literal : Expr
 		{
 			public Literal(object value) 
@@ -189,6 +211,26 @@ namespace ScarbroScript
 			public readonly List<Expr> elements;
 			
 		}
+		public class Dict : Expr
+		{
+			public Dict(List<Expr> elements)
+			{
+				
+				this.elements = elements;
+
+			}
+
+			public override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitDictExpr(this);
+
+			}
+
+			
+			public readonly List<Expr> elements;
+
+		}
+
 
 		public class Call : Expr
         {

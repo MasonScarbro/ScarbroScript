@@ -285,6 +285,20 @@ namespace ScarbroScript
             return null;
         }
 
+
+        public object VisitKeyValueExpr(Expr.KeyValue expr)
+        {
+            Resolve(expr.key);
+            Resolve(expr.value);
+            return null;
+        }
+
+        public object VisitDictExpr(Expr.Dict expr)
+        {
+            Resolve(expr.elements);
+            return null;
+        }
+
         //------- End Other Visits -------//
 
         public void Resolve(List<Stmt> statements)

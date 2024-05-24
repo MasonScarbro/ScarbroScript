@@ -48,10 +48,22 @@ namespace ScarbroScript
             }
             return null;
         }
+
+        public string VisitDictExpr(Expr.Dict expr)
+        {
+            throw new NotImplementedException();
+        }
+
         public String VisitGroupingExpr(Expr.Grouping expr)
         {
             return Print(expr.expression);
         }
+
+        public string VisitKeyValueExpr(Expr.KeyValue expr)
+        {
+            throw new NotImplementedException();
+        }
+
         public String VisitLiteralExpr(Expr.Literal expr)
         {
             if (expr.value == null) return "nil";

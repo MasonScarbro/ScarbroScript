@@ -234,7 +234,7 @@ namespace ScarbroScript.NativeMods
     }
     public class InteropabilityModI : ScarbroScriptInstance
     {
-        public InteropabilityModI() : base(new InteropabilityMod("InterRopability"))
+        public InteropabilityModI() : base(new InteropabilityMod("Interope"))
         {
             //Construct
         }
