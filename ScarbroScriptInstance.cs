@@ -47,5 +47,10 @@ namespace ScarbroScript
         {
             return klass.name + " instance";
         }
+
+        public string GetKlass()
+        {
+            return klass.name;
+        }
     }
 }

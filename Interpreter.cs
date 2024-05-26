@@ -22,6 +22,8 @@ namespace ScarbroScript
         {
             globals.Define("Math", new MathModI());
             globals.Define("Dict", new KVMod("Dict"));
+            globals.Define("Queue", new QueueMod("Queue"));
+            globals.Define("Stack", new QueueMod("Stack"));
             globals.Define("Interope", new InteropabilityModI());
             globals.Define("File", new FileModI());
             globals.Define("clock", new Clock());
@@ -372,6 +374,7 @@ namespace ScarbroScript
         public object VisitAccessExpr(Expr.Access expr)
         {
             object obj = Evaluate(expr.obj);
+            
 
             // Specific Instances
             if (obj is KVModI)
@@ -379,6 +382,7 @@ namespace ScarbroScript
                 KVModI kvobj = new KVModI();
                 obj = kvobj.GetContext();
             }
+            
 
             //Run value Instances
             if (obj is string stobj)
@@ -395,9 +399,20 @@ namespace ScarbroScript
             {
                 obj = new KVModI(dobj);
             }
+            if (obj is Queue<object> qobj)
+            {
+                obj = new QueueModI(qobj);
+                
+            }
+            if (obj is Stack<object> sobj)
+            {
+                obj = new StackModI(sobj);
+
+            }
             // Normal Instance
             if (obj is ScarbroScriptInstance _obj)
             {
+               
                 return _obj.Get(expr.name);
             }
             throw new RuntimeError(expr.name, "Only Instances have Properties");
@@ -677,8 +692,9 @@ namespace ScarbroScript
 
         public Object VisitCallExpr(Expr.Call expr)
         {
+            
             Object callee = Evaluate(expr.callee);
-
+            
             List<Object> arguments = new List<Object>();
             foreach (Expr argument in expr.arguments)
             {
@@ -690,7 +706,7 @@ namespace ScarbroScript
                 throw new RuntimeError(expr.paren, "Can only call functions and classes.");
             }
 
-           
+            
 
             ScarbroScriptCallable function = (ScarbroScriptCallable)callee;
             if (arguments.Count != function.Arity)
@@ -907,6 +923,7 @@ namespace ScarbroScript
             return new Token();
         }
 
+       
         
     }
 }

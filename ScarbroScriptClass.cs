@@ -31,6 +31,7 @@ namespace ScarbroScript
             ScarbroScriptInstance instance = new ScarbroScriptInstance(this);
             ScarbroScriptFunction initializer = FindMethod("init");
             if (this.name == "Dict") instance = new KVModI();
+            //if (this.name == "Queue") instance = new QueueModI();
             /// <summary>
             /// When a class is called, after the ScarbroScriptInstance is created,
             /// we look for an “init” method. 
