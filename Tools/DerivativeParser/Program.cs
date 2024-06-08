@@ -8,8 +8,7 @@ namespace DerivativeParser
 {
     class Program
     {
-        public static string src = "cos(4)"; // just a test value for now
-
+        public static string src = "4x * 3x";
         static void Main(string[] args)
         {
 
@@ -19,7 +18,7 @@ namespace DerivativeParser
             MathParser mparser = new MathParser(tokens);
             List<Formula> formulas = mparser.Parse();
             PrettyPrintFormulas(formulas);
-
+            DerivativeTaker.TakeDerivative(formulas);
         }
 
         private static void PrettyPrintTokens(List<Token> tokens)

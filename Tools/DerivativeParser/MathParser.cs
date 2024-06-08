@@ -77,7 +77,7 @@ namespace DerivativeParser
                 Formula right = Primary();
                 Token variable = FindRelevantVariable(formula, right);
 
-                formula = new Formula.QuotientRule(formula, variable, right);
+                formula = new Formula.ProductRule(formula, variable, right);
             }
 
             return formula;

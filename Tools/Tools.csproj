@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DerivativeParser\DerivativeTaker.cs" />
     <Compile Include="DerivativeParser\Expressions.cs" />
     <Compile Include="DerivativeParser\Formula.cs" />
     <Compile Include="DerivativeParser\MathParser.cs" />
