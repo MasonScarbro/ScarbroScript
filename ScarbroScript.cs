@@ -115,7 +115,7 @@ namespace ScarbroScript
 
         private static void report(int line, String where, String message)
         {
-            Console.WriteLine("[line " + line + "] Error" + where + ": " + message);
+            Console.WriteLine("[line " + line + "] Error " + where + ": " + message);
             hadError = true;
         }
 

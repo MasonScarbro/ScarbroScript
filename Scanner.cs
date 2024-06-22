@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ScarbroScript
 {
-    class Scanner
+    public class Scanner
     {
         // The Token KeyWords for Identifiers
         private static readonly Dictionary<string, TokenType> keywords = new Dictionary<string, TokenType>
@@ -76,7 +76,7 @@ namespace ScarbroScript
         {
             
             char c = Advance();
-            Console.WriteLine($"Scanning character: {c}, Line: {line}, Current Index: {current}");
+            //Console.WriteLine($"Scanning character: {c}, Line: {line}, Current Index: {current}");
             switch (c)
             {
                 //Single Char Lexemes
@@ -220,14 +220,14 @@ namespace ScarbroScript
             //Look for the fractional part
             if (Peek() == '.' && IsDigit(PeekNext()))
             {
-                Console.WriteLine("Number() - peek");
+                //Console.WriteLine("Number() - peek");
                 //consume the decimal
                 Advance();
                 while (IsDigit(Peek())) Advance();
             }
             
             var result = source.Substring(start, current - start);
-            Console.WriteLine(result);
+            //Console.WriteLine(result);
             AddToken(TokenType.NUMBER, Double.Parse(result));
         }
 
@@ -251,8 +251,8 @@ namespace ScarbroScript
             //The Closing "
             Advance();
             //just trims the qoutes for the Token, strings when outputted to console dont come with "
-            Console.WriteLine("Current = " + current);
-            Console.WriteLine("Substring = " + source.Substring(start + 1, current - start - 2));
+            //Console.WriteLine("Current = " + current);
+            //Console.WriteLine("Substring = " + source.Substring(start + 1, current - start - 2));
             String value = source.Substring(start + 1, current - start - 2);
             AddToken(TokenType.STRING, value);
         }

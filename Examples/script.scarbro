@@ -1,21 +1,5 @@
 
-// Delete the above shebang line to have the program run properly ^
-fun test(a){
-  while (a < 18){
-    print a;
-    ++a;
-  }
-}
-var a = 9;
-test(a);
 
-var b = a * 8;
-++b;
-print b;
-//I dont know what else to put
-print "Strings work!";
+var str = "mason";
 
-//string concatnation works too
-
-var c = 4 + "Mason";
-print c;
+for (var i = 0; i < 4; ++i){}

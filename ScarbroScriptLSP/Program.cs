@@ -11,7 +11,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using ScarbroScriptLSP.LSP;
 using ScarbroScriptLSP.Analysis;
-using ScarbroScript;
+
 
 namespace ScarbroScriptLSP
 {
@@ -25,11 +25,7 @@ namespace ScarbroScriptLSP
 
             if (Debugger.IsAttached) Debugger.Launch();
 
-            var source = "var a = 4 ";
-            Scanner scannerT = new Scanner(source); //Our own scanner not the built in one (for Java)
-            List<Token> tokens = scannerT.ScanTokens();
-            LintParser parser = new LintParser(tokens);
-            List<Exception> errs = parser.Parse();
+            
 
 
             logger = GetLogger("C:/Users/Admin/Desktop/test-log.txt");

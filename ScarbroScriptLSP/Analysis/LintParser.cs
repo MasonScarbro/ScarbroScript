@@ -9,7 +9,7 @@ namespace ScarbroScriptLSP.Analysis
 {
     public class LintParser
     {
-        private class LintParseError : FormatException 
+        public class LintParseError : FormatException 
         {
             public int line;
             public string problemChild;
@@ -157,7 +157,7 @@ namespace ScarbroScriptLSP.Analysis
             Consume(TokenType.SEMICOLON, "Expected a ';' after loop condition");
 
             Expr increment = null;
-            if (Check(TokenType.RIGHT_PAREN))
+            if (!Check(TokenType.RIGHT_PAREN))
             {
                 increment = Expression();
             }

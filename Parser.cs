@@ -44,7 +44,7 @@ namespace ScarbroScript
 
         private Stmt Statement()
         {
-            Console.WriteLine("Parsing Statement...");
+            //Console.WriteLine("Parsing Statement...");
             if (Match(TokenType.IMPORT)) return ImportStatement();
             if (Match(TokenType.FOR)) return ForStatement();
             if (Match(TokenType.FOREACH)) return ForEachStatement();
@@ -80,8 +80,8 @@ namespace ScarbroScript
                 return new Stmt.Break();
             } else
             {
-                Error(Previous(), "Break statement is only valid inside a loop.");
-                return null;
+                throw Error(Previous(), "Break statement is only valid inside a loop.");
+                
             }
         }
 
@@ -98,7 +98,7 @@ namespace ScarbroScript
                 {
                     if (!(stmt is Stmt.Case))
                     {
-                        Error(Previous(), "Switches must only contain Case Stmts");
+                        throw Error(Previous(), "Switches must only contain Case Stmts");
                     }
                 }
             }
@@ -142,7 +142,7 @@ namespace ScarbroScript
             Consume(TokenType.SEMICOLON, "Expected a ';' after loop condition");
 
             Expr increment = null;
-            if (Check(TokenType.RIGHT_PAREN))
+            if (!Check(TokenType.RIGHT_PAREN))
             {
                 increment = Expression();
             }
@@ -259,7 +259,7 @@ namespace ScarbroScript
         {
             try
             {
-                Console.WriteLine("Entering While Loop... (Parse)");
+                //Console.WriteLine("Entering While Loop... (Parse)");
 
                 Consume(TokenType.LEFT_PAREN, "Expected a '(' after and if");
                 Expr condition = Expression();
@@ -267,7 +267,7 @@ namespace ScarbroScript
 
                 //Increments loopDepth to indicate if we are in a loop
                 loopDepth++;
-                Console.WriteLine("Loop Depth: " + loopDepth);
+                //Console.WriteLine("Loop Depth: " + loopDepth);
 
 
                 Stmt body = Statement();
@@ -276,9 +276,9 @@ namespace ScarbroScript
             }
             finally
             {
-                Console.WriteLine("Exiting While Loop... (Parse)");
+                //Console.WriteLine("Exiting While Loop... (Parse)");
                 loopDepth--;
-                Console.WriteLine("Loop Depth: " + loopDepth);
+                //Console.WriteLine("Loop Depth: " + loopDepth);
             }
 
         }
@@ -293,14 +293,14 @@ namespace ScarbroScript
 
         private List<Stmt> Block()
         {
-            Console.WriteLine("Parsing Block...");
+            //Console.WriteLine("Parsing Block...");
             List<Stmt> statements = new List<Stmt>();
 
             while (!Check(TokenType.RIGHT_BRACE) && !IsAtEnd())
             {
                 statements.Add(Declaration());
             }
-            Console.WriteLine(tokens.ToString());
+            //Console.WriteLine(tokens.ToString());
             Consume(TokenType.RIGHT_BRACE, "Expected a '}' after block");
 
             return statements;
@@ -659,7 +659,7 @@ namespace ScarbroScript
                     Console.WriteLine(index);
 
                 }
-                Console.WriteLine(variable.lexeme);
+                //Console.WriteLine(variable.lexeme);
                 return new Expr.Variable(variable, isArray, index);
             }
 

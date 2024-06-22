@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ScarbroScriptLSP.LSP;
-namespace ScarbroScriptLSP
+using ScarbroScript;
+
+
+namespace ScarbroScriptLSP.Analysis
 {
     class State
     {
@@ -59,36 +62,45 @@ namespace ScarbroScriptLSP
             // Obviously in real life we would probably pass in any Errors found from teh Parser
             // if there are no errors we would maybe pass in the AST for linting nd any type mismatches
             List<Diagnostic> diagnostics = new List<Diagnostic>();
+
             
-                var lines = text.Split('\n');
-                for (int row = 0; row < lines.Length; row++)
+            Scanner scannerT = new Scanner(text); 
+            List<Token> tokens = scannerT.ScanTokens();
+            LintParser parser = new LintParser(tokens);
+            List<Exception> errs = parser.Parse();
+
+            var lines = text.Split('\n');
+            foreach (LintParser.LintParseError err in errs)
+            {
+                if (text.Contains(err.problemChild))
                 {
-                    if (text.Contains("file"))
+                    string line = lines[err.line - 1];
+                    Program.logger.Log("Reported Line = " + err.line + " Line In File = " + line);
+                    int idx = line.IndexOf(err.problemChild);
+                    Program.logger.Log("Found the problem we were looking for " + err.problemChild);
+                    if (idx >= 0)
                     {
-                        string line = lines[row];
-                        int i = line.IndexOf("file");
-                        Program.logger.Log("Found the problem we were looking for");
-                        if (i >= 0)
+                        Program.logger.Log("Found index! " + idx);
+                        diagnostics.Add(new Diagnostic
                         {
-                            Program.logger.Log("Found index! " + i);
-                            diagnostics.Add(new Diagnostic
-                            {
 
-                                Range = Range.NewLineRange(row, i, i + "file".Length),
-                                Severity = 1,
-                                Source = "Cmon Now",
-                                Message = "You really should have this be Poopy :("
+                            Range = Range.NewLineRange(err.line, idx - 1, idx + err.problemChild.Length),
+                            Severity = 1,
+                            Source = "ScarbroScript Parse Error",
+                            Message = err.Message
 
-                            });
+                        });
 
-                        }
-                        else
-                        {
-                            Program.logger.Log("could not find index");
-                        }
                     }
-
+                    else
+                    {
+                        Program.logger.Log(err.problemChild + " was not found in the text");
+                    }
                 }
+            }
+
+            //var lines = text.Split('\n');
+                
             
             
             return diagnostics;
