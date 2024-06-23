@@ -41,7 +41,8 @@ namespace ScarbroScriptLSP.Analysis
                 catch (LintParseError e)
                 {
                     errors.Add(e);
-                    Synchronize();
+                    object _continue = Synchronize();
+                    if (_continue is Exception syncedErr) errors.Add(syncedErr); 
                 }
                 
             }
@@ -771,28 +772,53 @@ namespace ScarbroScriptLSP.Analysis
             return new LintParseError(message, token.line, token.lexeme);
         }
 
-        private void Synchronize()
+        private object Synchronize()
         {
-            Advance();
+            //Advance();
 
             while (!IsAtEnd())
             {
-                if (Previous().type == TokenType.SEMICOLON) return;
+                if (Previous().type == TokenType.SEMICOLON) return null;
 
                 switch (Peek().type)
                 {
                     case TokenType.CLASS:
                     case TokenType.FUN:
                     case TokenType.VAR:
+                        return null;
                     case TokenType.FOR:
+                        try
+                        {
+                            ForStatement();
+                        }
+                        catch (LintParseError e)
+                        {
+                            Advance();
+                            return e;
+                            
+                        }
+                        break;
                     case TokenType.IF:
+                        try
+                        {
+                            IfStatement();
+                            
+                        }
+                        catch (LintParseError e)
+                        {
+                            Advance();
+                            return e;
+                        }
+                        break;
                     case TokenType.WHILE:
                     case TokenType.PRINT:
                     case TokenType.RETURN:
-                        return;
+                        return null;
                 }
                 Advance();
+                
             }
+            return null;
         }
 
         private bool Check(TokenType type)

@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using ScarbroScriptLSP.LSP;
 using ScarbroScriptLSP.Analysis;
+using ScarbroScript;
 
 
 namespace ScarbroScriptLSP

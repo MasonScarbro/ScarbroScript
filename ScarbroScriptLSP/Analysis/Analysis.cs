@@ -66,25 +66,36 @@ namespace ScarbroScriptLSP.Analysis
             
             Scanner scannerT = new Scanner(text); 
             List<Token> tokens = scannerT.ScanTokens();
-            LintParser parser = new LintParser(tokens);
-            List<Exception> errs = parser.Parse();
+            LintParser errParser = new LintParser(tokens);
+            List<Exception> errs = errParser.Parse();
+            if (errs == null || errs.Count == 0)
+            {
+                Parser parser = new Parser(tokens);
+                List<Stmt> statements = parser.Parse();
+            }
 
             var lines = text.Split('\n');
             foreach (LintParser.LintParseError err in errs)
             {
+                Program.logger.Log($"Processing error: {err.Message} at line {err.line}, problem: {err.problemChild}");
                 if (text.Contains(err.problemChild))
                 {
+                    if (err.line > 0 && err.line <= lines.Length) { Program.logger.Log("err.line was not greater than 0 or was <= lines.lenght"); }
                     string line = lines[err.line - 1];
                     Program.logger.Log("Reported Line = " + err.line + " Line In File = " + line);
                     int idx = line.IndexOf(err.problemChild);
                     Program.logger.Log("Found the problem we were looking for " + err.problemChild);
+
+                    Program.logger.Log($"Line {err.line}: {line}");
+                    Program.logger.Log($"Index of problemChild '{err.problemChild}': {idx}");
+
                     if (idx >= 0)
                     {
                         Program.logger.Log("Found index! " + idx);
                         diagnostics.Add(new Diagnostic
                         {
 
-                            Range = Range.NewLineRange(err.line, idx - 1, idx + err.problemChild.Length),
+                            Range = Range.NewLineRange(err.line - 1, idx, idx + err.problemChild.Length),
                             Severity = 1,
                             Source = "ScarbroScript Parse Error",
                             Message = err.Message
