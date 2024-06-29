@@ -210,6 +210,7 @@ namespace ScarbroScriptLSP
                             {
                                 logger.Log("Deserialization successful!");
                                 logger.Log($"Opened: {request.Params.TextDocument.URI}");
+                                logger.Log($"Opened: {request.Params.Position}");
 
                                 var response = state.Completion(request.ID, request.Params.TextDocument.URI, request.Params.Position);
                                 WriteResponse(response);

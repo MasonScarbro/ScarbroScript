@@ -194,19 +194,55 @@ namespace ScarbroScriptLSP.Analysis
 
         public CompletionResponse Completion(int id, string uri, Position position)
         {
+            
             var encodedUri = new Uri(uri).AbsoluteUri;
-            Program.logger.Log($"Handling CodeAction for URI: {encodedUri}");
+            Program.logger.Log($"Handling Completion for URI: {encodedUri}");
             var document = documents[encodedUri];
             var items = new List<CompletionItem>();
-            items.Add(new CompletionItem
+            var lines = document.Split('\n');
+
+            if (position.Line < lines.Length)
             {
-                Label = "Just a Dummy AutoComplete",
-                Detail = "Testing 123",
-                Documentation = "ScarbroScriptLSP is running the autoComplete..."
-            });
+                string line = lines[position.Line];
+                if (position.Character <= line.Length)
+                {
+                    items = GetClassAutoCompletion(line, position);
+                }
+            }
+
+            
 
             //int the actual ask your static analysis tools to figure out good completions
             return new CompletionResponse("2.0", id, items);
+        }
+
+        private List<CompletionItem> GetClassAutoCompletion(string line, Position position)
+        {
+            string beforeCursor = line.Substring(0, position.Character);
+            int lastDotIndex = beforeCursor.LastIndexOf('.');
+
+            if (lastDotIndex > 0)
+            {
+                string wordBeforeDot = beforeCursor.Substring(0, lastDotIndex).Trim().Split().Last();
+                Program.logger.Log($"Word before '.': {wordBeforeDot}");
+                return NativeClassChecker.TryGetNatives(wordBeforeDot);
+                // This would be 
+                //if (wordBeforeDot == nonNativeClass)
+                //{
+                //    var methods = new List<string> { };
+                //    //... add each method based on what was found
+                //    var items = methods.Select(func => new CompletionItem
+                //    {
+                //        Label = func,
+                //        Detail = "Math Function",
+                //        Documentation = $"Math.{func}() function"
+                //    }).ToList();
+
+                //    return new CompletionResponse("2.0", id, items);
+                //}
+            }
+            Program.logger.Log($"Err: lastDotIndex was < 0");
+            return null;
         }
 
         
