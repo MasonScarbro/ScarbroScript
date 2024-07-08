@@ -85,7 +85,86 @@ namespace ScarbroScriptLSP.Analysis
                     },
                 }
             },
-            
+            { "IO", new List<CompletionItem>
+                {
+                    new CompletionItem
+                    {
+                        Label = "readln",
+                        Detail = "IO Function | 1 Parameter: any",
+                        Documentation = "Starts an Input ReadFromConsole"
+
+                    },
+                    
+                }
+            },
+            { "File", new List<CompletionItem>
+                {
+                    new CompletionItem
+                    {
+                        Label = "write",
+                        Detail = "File Function | 3 Parameter: string path, any text, string setting",
+                        Documentation = "writes to a file (settings: {'w','a','ow','oa'})"
+
+                    },
+                    new CompletionItem
+                    {
+                        Label = "read",
+                        Detail = "File Function | 1 Parameter: string path",
+                        Documentation = "reads from a file"
+
+                    },
+                    new CompletionItem
+                    {
+                        Label = "readlns",
+                        Detail = "File Function | 1 Parameter: string path",
+                        Documentation = "reads all individual lines from a file"
+
+                    },
+                    new CompletionItem
+                    {
+                        Label = "mv",
+                        Detail = "File Function | 2 Parameter: string pathFrom, string pathTo",
+                        Documentation = "moves file to the other (unix based)"
+
+                    },
+                    new CompletionItem
+                    {
+                        Label = "rm",
+                        Detail = "File Function | 1 Parameter: string path",
+                        Documentation = "RemovesFile"
+
+                    },
+
+                }
+            },
+            { "Interope", new List<CompletionItem>
+                {
+                    new CompletionItem
+                    {
+                        Label = "executeMethod",
+                        Detail = "Interope Function | 3 Parameter: string filePath, string namespace, string class, string method",
+                        Documentation = "Executes a C# method"
+
+                    },
+                    new CompletionItem
+                    {
+                        Label = "generateExe",
+                        Detail = "Interope Function | 3 Parameter: string filePath, string pathTo, string fileName",
+                        Documentation = "Executes a C# file and generates a Exe"
+
+                    },
+                    new CompletionItem
+                    {
+                        Label = "executeFile",
+                        Detail = "Interope Function | 1 Parameter: string path",
+                        Documentation = "Compiles C# file"
+
+                    },
+                    
+
+                }
+            },
+
 
         };
 

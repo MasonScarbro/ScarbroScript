@@ -226,7 +226,7 @@ namespace ScarbroScriptLSP.Analysis
                 string wordBeforeDot = beforeCursor.Substring(0, lastDotIndex).Trim().Split().Last();
                 Program.logger.Log($"Word before '.': {wordBeforeDot}");
                 return NativeClassChecker.TryGetNatives(wordBeforeDot);
-                // This would be 
+                // This would be for classes built by the user
                 //if (wordBeforeDot == nonNativeClass)
                 //{
                 //    var methods = new List<string> { };
