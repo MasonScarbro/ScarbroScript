@@ -12,7 +12,7 @@ namespace ScarbroScriptLSP.Analysis
     class State
     {
         public static Dictionary<string, string> documents { get; set; }
-
+        private Linterpreter.Scoper scoper = new Linterpreter.Scoper();
 
         public State()
         {
@@ -72,6 +72,7 @@ namespace ScarbroScriptLSP.Analysis
             {
                 Parser parser = new Parser(tokens);
                 List<Stmt> statements = parser.Parse();
+                scoper = new Linterpreter.Scoper(statements);
             }
 
             var lines = text.Split('\n');
@@ -206,7 +207,9 @@ namespace ScarbroScriptLSP.Analysis
                 string line = lines[position.Line];
                 if (position.Character <= line.Length)
                 {
-                    items = GetClassAutoCompletion(line, position);
+                    
+                    items = GetClassAutoCompletion(line, position, Linterpreter.scopedVariables);
+                    
                 }
             }
 
@@ -216,7 +219,7 @@ namespace ScarbroScriptLSP.Analysis
             return new CompletionResponse("2.0", id, items);
         }
 
-        private List<CompletionItem> GetClassAutoCompletion(string line, Position position)
+        private List<CompletionItem> GetClassAutoCompletion(string line, Position position, Dictionary<string, object> scopedobjs)
         {
             string beforeCursor = line.Substring(0, position.Character);
             int lastDotIndex = beforeCursor.LastIndexOf('.');
@@ -225,6 +228,19 @@ namespace ScarbroScriptLSP.Analysis
             {
                 string wordBeforeDot = beforeCursor.Substring(0, lastDotIndex).Trim().Split().Last();
                 Program.logger.Log($"Word before '.': {wordBeforeDot}");
+                if (Linterpreter.lintErrors != null)
+                {
+                    Program.logger.Log("found a Linter Err (will be handled in diagnostics later)");
+                }
+                if (!Linterpreter.scopedVariables.ContainsKey(wordBeforeDot))
+                {
+                    Program.logger.Log("Variable Not Found in scope");
+                }
+                if (Linterpreter.scopedVariables.ContainsKey(wordBeforeDot))
+                {
+                    Program.logger.Log("Variable Found in scope");
+                    return NativeClassChecker.TryGetNatives(Linterpreter.scopedVariables[wordBeforeDot]);
+                }
                 return NativeClassChecker.TryGetNatives(wordBeforeDot);
                 // This would be for classes built by the user
                 //if (wordBeforeDot == nonNativeClass)

@@ -9,7 +9,7 @@ namespace ScarbroScriptLSP.Analysis
 {
     public class NativeClassChecker
     {
-        private static readonly Dictionary<string, List<CompletionItem>> natives = new Dictionary<string, List<CompletionItem>>
+        private static readonly Dictionary<object, List<CompletionItem>> natives = new Dictionary<object, List<CompletionItem>>
         {
             { "Math", new List<CompletionItem>
                 {
@@ -164,6 +164,80 @@ namespace ScarbroScriptLSP.Analysis
 
                 }
             },
+            { typeof(List<>), new List<CompletionItem>
+                {
+                    new CompletionItem
+                    {
+                        Label = "append",
+                        Detail = "Array Function | 1 Parameter: any value",
+                        Documentation = "adds a value to the end of the array"
+
+                    },
+                    new CompletionItem
+            {
+                Label = "sizeOf",
+                Detail = "Array Function | No Parameters",
+                Documentation = "Returns the number of elements in the array"
+            },
+            new CompletionItem
+            {
+                Label = "remove",
+                Detail = "Array Function | 1 Parameter: any value",
+                Documentation = "Removes the first occurrence of the specified value from the array"
+            },
+            new CompletionItem
+            {
+                Label = "removeAt",
+                Detail = "Array Function | 1 Parameter: int index",
+                Documentation = "Removes the element at the specified index from the array"
+            },
+            new CompletionItem
+            {
+                Label = "contains",
+                Detail = "Array Function | 1 Parameter: any value",
+                Documentation = "Checks if the array contains the specified value"
+            },
+            new CompletionItem
+            {
+                Label = "reverse",
+                Detail = "Array Function | No Parameters",
+                Documentation = "Reverses the order of the elements in the array"
+            },
+            new CompletionItem
+            {
+                Label = "getAt",
+                Detail = "Array Function | 1 Parameter: int index",
+                Documentation = "Returns the element at the specified index in the array"
+            },
+            new CompletionItem
+            {
+                Label = "indexOf",
+                Detail = "Array Function | 1 Parameter: any value",
+                Documentation = "Returns the index of the first occurrence of the specified value in the array"
+            },
+            new CompletionItem
+            {
+                Label = "clear",
+                Detail = "Array Function | No Parameters",
+                Documentation = "Removes all elements from the array"
+            },
+            new CompletionItem
+            {
+                Label = "sort",
+                Detail = "Array Function | No Parameters",
+                Documentation = "Sorts the elements in the array"
+            },
+            new CompletionItem
+            {
+                Label = "concat",
+                Detail = "Array Function | 1 Parameter: List<T> other",
+                Documentation = "Concatenates the elements of the specified array to the end of this array"
+            }
+
+
+
+                }
+            },
 
 
         };
@@ -175,7 +249,7 @@ namespace ScarbroScriptLSP.Analysis
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
-        public static List<CompletionItem> TryGetNatives(string line)
+        public static List<CompletionItem> TryGetNatives(object line)
         {
             if (natives.ContainsKey(line))
             {

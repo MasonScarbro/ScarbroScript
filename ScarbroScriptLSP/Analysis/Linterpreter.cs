@@ -8,7 +8,7 @@ using ScarbroScript;
 namespace ScarbroScriptLSP.Analysis
 {
     
-    public class Linterpreter
+    public static class Linterpreter
     {
         public class LinterpreterError : FormatException
         {
@@ -26,16 +26,28 @@ namespace ScarbroScriptLSP.Analysis
         public static List<LinterpreterError> lintErrors = new List<LinterpreterError>();
         public class Scoper
         {
+
+            public Scoper()
+            {
+
+            }
             public Scoper(List<Stmt> stmts)
             {
                 foreach(Stmt stmt in stmts)
                 {
                     if (stmt is Stmt.Var stmtv)
                     {
+                        Program.logger.Log("Inside Scoper Just found a Variable");
                         StoreScopedObject(stmtv.name.lexeme, EvaluateType(stmtv.initializer));
+                    }
+                    if (stmt is Stmt.Class stmtc)
+                    {
+                        
                     }
                 }
             }
+
+            
 
 
 
@@ -50,8 +62,12 @@ namespace ScarbroScriptLSP.Analysis
             {
                 scopedVariables[name] = type;
             }
+
+
             private object EvaluateType(Expr value)
             {
+
+                //Example if the variable is init to another it should match the previous variable
                 if (value is Expr.Variable ev)
                 {
                     if (!scopedVariables.ContainsKey(ev.name.lexeme))
@@ -66,7 +82,13 @@ namespace ScarbroScriptLSP.Analysis
                     //else
                     return scopedVariables[ev.name.lexeme];
                 }
-                //cont...
+                //if its an array just return the type so it can be scoped
+                if (value is Expr.Array)
+                {
+                    Program.logger.Log("Inside Scoper, found arr type!");
+                    return typeof(List<>);
+                }
+                
 
                 return null;
             }
