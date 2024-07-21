@@ -66,10 +66,12 @@ namespace ScarbroScriptLSP.Analysis
 
             private object EvaluateType(Expr value)
             {
+                Program.logger.Log("Evaluating Type... " + value);
 
                 //Example if the variable is init to another it should match the previous variable
                 if (value is Expr.Variable ev)
                 {
+                    Program.logger.Log("Value was a variable");
                     if (!scopedVariables.ContainsKey(ev.name.lexeme))
                     {
                         lintErrors.Add(new LinterpreterError
@@ -88,6 +90,19 @@ namespace ScarbroScriptLSP.Analysis
                     Program.logger.Log("Inside Scoper, found arr type!");
                     return typeof(List<>);
                 }
+                if (value is Expr.Call expc)
+                {
+                    Program.logger.Log("It was a Call");
+                    if (expc.callee is Expr.Variable expcv)
+                    {
+                        Program.logger.Log("Call was a Var and Name was: " + expcv.name.lexeme);
+                        if (expcv.name.lexeme.Equals("Queue")) return typeof(Queue<>);
+                        if (expcv.name.lexeme.Equals("Stack")) return typeof(Stack<>);
+                        if (expcv.name.lexeme.Equals("Dict")) return typeof(HashSet<>);
+
+                    }
+                }
+                if (value is Expr.Dict) return typeof(HashSet<>);
                 
 
                 return null;

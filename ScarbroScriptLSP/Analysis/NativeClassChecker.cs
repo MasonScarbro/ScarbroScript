@@ -18,7 +18,7 @@ namespace ScarbroScriptLSP.Analysis
                         Label = "cos",
                         Detail = "Math Function | 1 Parameter: int x",
                         Documentation = "The cos(x) function from math"
-                        
+
                     },
                     new CompletionItem
                     {
@@ -94,7 +94,7 @@ namespace ScarbroScriptLSP.Analysis
                         Documentation = "Starts an Input ReadFromConsole"
 
                     },
-                    
+
                 }
             },
             { "File", new List<CompletionItem>
@@ -160,7 +160,7 @@ namespace ScarbroScriptLSP.Analysis
                         Documentation = "Compiles C# file"
 
                     },
-                    
+
 
                 }
             },
@@ -174,68 +174,206 @@ namespace ScarbroScriptLSP.Analysis
 
                     },
                     new CompletionItem
-            {
-                Label = "sizeOf",
-                Detail = "Array Function | No Parameters",
-                Documentation = "Returns the number of elements in the array"
-            },
-            new CompletionItem
-            {
-                Label = "remove",
-                Detail = "Array Function | 1 Parameter: any value",
-                Documentation = "Removes the first occurrence of the specified value from the array"
-            },
-            new CompletionItem
-            {
-                Label = "removeAt",
-                Detail = "Array Function | 1 Parameter: int index",
-                Documentation = "Removes the element at the specified index from the array"
-            },
-            new CompletionItem
-            {
-                Label = "contains",
-                Detail = "Array Function | 1 Parameter: any value",
-                Documentation = "Checks if the array contains the specified value"
-            },
-            new CompletionItem
-            {
-                Label = "reverse",
-                Detail = "Array Function | No Parameters",
-                Documentation = "Reverses the order of the elements in the array"
-            },
-            new CompletionItem
-            {
-                Label = "getAt",
-                Detail = "Array Function | 1 Parameter: int index",
-                Documentation = "Returns the element at the specified index in the array"
-            },
-            new CompletionItem
-            {
-                Label = "indexOf",
-                Detail = "Array Function | 1 Parameter: any value",
-                Documentation = "Returns the index of the first occurrence of the specified value in the array"
-            },
-            new CompletionItem
-            {
-                Label = "clear",
-                Detail = "Array Function | No Parameters",
-                Documentation = "Removes all elements from the array"
-            },
-            new CompletionItem
-            {
-                Label = "sort",
-                Detail = "Array Function | No Parameters",
-                Documentation = "Sorts the elements in the array"
-            },
-            new CompletionItem
-            {
-                Label = "concat",
-                Detail = "Array Function | 1 Parameter: List<T> other",
-                Documentation = "Concatenates the elements of the specified array to the end of this array"
-            }
+                    {
+                        Label = "sizeOf",
+                        Detail = "Array Function | No Parameters",
+                        Documentation = "Returns the number of elements in the array"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "remove",
+                        Detail = "Array Function | 1 Parameter: any value",
+                        Documentation = "Removes the first occurrence of the specified value from the array"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "removeAt",
+                        Detail = "Array Function | 1 Parameter: int index",
+                        Documentation = "Removes the element at the specified index from the array"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "contains",
+                        Detail = "Array Function | 1 Parameter: any value",
+                        Documentation = "Checks if the array contains the specified value"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "reverse",
+                        Detail = "Array Function | No Parameters",
+                        Documentation = "Reverses the order of the elements in the array"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "getAt",
+                        Detail = "Array Function | 1 Parameter: int index",
+                        Documentation = "Returns the element at the specified index in the array"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "indexOf",
+                        Detail = "Array Function | 1 Parameter: any value",
+                        Documentation = "Returns the index of the first occurrence of the specified value in the array"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "clear",
+                        Detail = "Array Function | No Parameters",
+                        Documentation = "Removes all elements from the array"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "sort",
+                        Detail = "Array Function | No Parameters",
+                        Documentation = "Sorts the elements in the array"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "concat",
+                        Detail = "Array Function | 1 Parameter: List<T> other",
+                        Documentation = "Concatenates the elements of the specified array to the end of this array"
+                    }
 
 
 
+                }
+            },
+            { typeof(Queue<>), new List<CompletionItem>
+                {
+                    
+                    new CompletionItem
+                    {
+                        Label = "enqueue",
+                        Detail = "Queue Function | 1 Parameter: any value",
+                        Documentation = "Adds a value to the end of the Queue"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "printValues",
+                        Detail = "Queue Function | 0 Parameters",
+                        Documentation = "Prints all values in the Queue"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "dequeue",
+                        Detail = "Queue Function | 0 Parameters",
+                        Documentation = "Removes and returns the first value from the Queue"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "count",
+                        Detail = "Queue Function | 0 Parameters",
+                        Documentation = "Returns the number of elements in the Queue"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "clear",
+                        Detail = "Queue Function | 0 Parameters",
+                        Documentation = "Removes all elements from the Queue"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "peek",
+                        Detail = "Queue Function | 0 Parameters",
+                        Documentation = "Returns the first value in the Queue without removing it"
+                    },
+                }
+            },
+            { typeof(Stack<>), new List<CompletionItem>
+                {
+
+                    new CompletionItem
+                    {
+                        Label = "push",
+                        Detail = "Stack Function | 1 Parameter: any value",
+                        Documentation = "Adds a value to the top of the stack"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "printValues",
+                        Detail = "Stack Function | 0 Parameters",
+                        Documentation = "Prints all values in the stack"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "pop",
+                        Detail = "Stack Function | 0 Parameters",
+                        Documentation = "Removes and returns the value from the top of the stack"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "count",
+                        Detail = "Stack Function | 0 Parameters",
+                        Documentation = "Returns the number of elements in the stack"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "clear",
+                        Detail = "Stack Function | 0 Parameters",
+                        Documentation = "Removes all elements from the stack"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "peek",
+                        Detail = "Stack Function | 0 Parameters",
+                        Documentation = "Returns the value at the top of the stack without removing it"
+                    },
+                }
+            },
+            { typeof(HashSet<>), new List<CompletionItem>
+                {
+
+                    new CompletionItem
+                    {
+                        Label = "add",
+                        Detail = "Dictionary Function | 2 Parameters: key, value",
+                        Documentation = "Adds a key-value pair to the dictionary"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "remove",
+                        Detail = "Dictionary Function | 1 Parameter: key",
+                        Documentation = "Removes the key-value pair with the specified key from the dictionary"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "contains",
+                        Detail = "Dictionary Function | 1 Parameter: key",
+                        Documentation = "Checks if the dictionary contains the specified key"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "getVal",
+                        Detail = "Dictionary Function | 1 Parameter: key",
+                        Documentation = "Returns the value associated with the specified key"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "getVals",
+                        Detail = "Dictionary Function | 0 Parameters",
+                        Documentation = "Returns a collection of all values in the dictionary"
+                    },
+
+                    new CompletionItem
+                    {
+                        Label = "getKeys",
+                        Detail = "Dictionary Function | 0 Parameters",
+                        Documentation = "Returns a collection of all keys in the dictionary"
+                    },
                 }
             },
 
