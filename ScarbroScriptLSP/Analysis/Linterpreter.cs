@@ -7,7 +7,7 @@ using ScarbroScript;
 
 namespace ScarbroScriptLSP.Analysis
 {
-    
+
     public static class Linterpreter
     {
         public class LinterpreterError : FormatException
@@ -31,9 +31,11 @@ namespace ScarbroScriptLSP.Analysis
             {
 
             }
+
+
             public Scoper(List<Stmt> stmts)
             {
-                foreach(Stmt stmt in stmts)
+                foreach (Stmt stmt in stmts)
                 {
                     if (stmt is Stmt.Var stmtv)
                     {
@@ -42,12 +44,12 @@ namespace ScarbroScriptLSP.Analysis
                     }
                     if (stmt is Stmt.Class stmtc)
                     {
-                        
+
                     }
                 }
             }
 
-            
+
 
 
 
@@ -103,12 +105,77 @@ namespace ScarbroScriptLSP.Analysis
                     }
                 }
                 if (value is Expr.Dict) return typeof(HashSet<>);
-                
+                if (value is Expr.Binary expb)
+                {
+                    object left = EvaluateType(expb.left);
+                    object right = EvaluateType(expb.right);
+
+                    switch (expb.oper.type)
+                    {
+                        case TokenType.GREATER:
+                        case TokenType.LESS_EQUAL:
+                        case TokenType.GREATER_EQUAL:
+                        case TokenType.LESS:
+                        case TokenType.BANG_EQUAL:
+                        case TokenType.EQUAL_EQUAL:
+                            return typeof(bool);
+                        case TokenType.SLASH:
+                            CheckOperands(expb, left, right);
+                            if ((double)right == 0)
+                            {
+                                lintErrors.Add(
+                                    new LinterpreterError(
+                                        "Cant Divide By Zero",
+                                        expb.oper.line,
+                                        expb.oper.lexeme
+                                        )
+                                    );
+                            }
+                            return typeof(double);
+                        case TokenType.MINUS:
+                        case TokenType.STAR:
+                            CheckOperands(expb, left, right);
+                            return typeof(double);
+                        case TokenType.PLUS:
+                            if (left is double && right is double)
+                            {
+                                return typeof(double);
+                            }
+                            if (left is double && right is string || right is double && left is string)
+                            {
+                                return typeof(string);
+                            }
+                            //else
+                            lintErrors.Add(
+                                new LinterpreterError(
+                                    "Type mismatch between operands (Must be double or string)",
+                                    expb.oper.line,
+                                    expb.oper.lexeme
+                                    )
+                                );
+                            return null;
+                    }
+                }
 
                 return null;
             }
+
+
+
+            private void CheckOperands(Expr.Binary expb, object left, object right)
+            {
+                if (left is double && right is double) return;
+                //else
+                lintErrors.Add(
+                    new LinterpreterError(
+                        "Operands Must Be Numbers",
+                        expb.oper.line,
+                        expb.oper.lexeme
+                        )
+                    );
+            }
         }
-        
+
 
     }
 }
