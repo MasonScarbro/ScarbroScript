@@ -10,7 +10,7 @@ namespace ScarbroScriptLSP.Analysis
 
     public static class Linterpreter
     {
-        public class LinterpreterError : FormatException
+        public class LinterpreterError : Exception
         {
             public int line;
             public string problemChild;
@@ -23,7 +23,7 @@ namespace ScarbroScriptLSP.Analysis
 
         public static Dictionary<string, object> scopedVariables = new Dictionary<string, object>();
         public static Dictionary<string, object> scopedClasses = new Dictionary<string, object>();
-        public static List<LinterpreterError> lintErrors = new List<LinterpreterError>();
+        public static List<Exception> lintErrors = new List<Exception>();
         public class Scoper
         {
 
@@ -110,6 +110,9 @@ namespace ScarbroScriptLSP.Analysis
                     object left = EvaluateType(expb.left);
                     object right = EvaluateType(expb.right);
 
+                    Program.logger.Log("Inside Binary and Left Was: " + left + " of type " + left?.GetType());
+                    Program.logger.Log("Inside Binary and Right Was: " + right + " of type " + right?.GetType());
+
                     switch (expb.oper.type)
                     {
                         case TokenType.GREATER:
@@ -139,13 +142,16 @@ namespace ScarbroScriptLSP.Analysis
                         case TokenType.PLUS:
                             if (left is double && right is double)
                             {
+                                Program.logger.Log("Was a Double (Binary)");
                                 return typeof(double);
                             }
-                            if (left is double && right is string || right is double && left is string)
+                            if (left is string || right is string)
                             {
+                                Program.logger.Log("Was a string (Binary)");
                                 return typeof(string);
                             }
                             //else
+                            Program.logger.Log("Was Neither Double nor String :(");
                             lintErrors.Add(
                                 new LinterpreterError(
                                     "Type mismatch between operands (Must be double or string)",
@@ -155,6 +161,20 @@ namespace ScarbroScriptLSP.Analysis
                                 );
                             return null;
                     }
+                }
+                if (value is Expr.Literal expl)
+                {
+                    //If literal just get type
+                    Program.logger.Log("Inside Literal and was: " + expl.value.GetType());
+                    return expl.value;
+                }
+                if (value is Expr.Logical)
+                {
+                    return typeof(bool);
+                }
+                if (value is Expr.Grouping expg)
+                {
+                    return EvaluateType(expg.expression);
                 }
 
                 return null;
@@ -173,6 +193,12 @@ namespace ScarbroScriptLSP.Analysis
                         expb.oper.lexeme
                         )
                     );
+            }
+
+
+            public List<Exception> GetLinterpreterErrors()
+            {
+                return lintErrors;
             }
         }
 

@@ -73,49 +73,105 @@ namespace ScarbroScriptLSP.Analysis
                 Parser parser = new Parser(tokens);
                 List<Stmt> statements = parser.Parse();
                 scoper = new Linterpreter.Scoper(statements);
+                List<Exception> linterpreterErrors = scoper.GetLinterpreterErrors();
+                if (linterpreterErrors.Count != 0)
+                {
+                    errs = linterpreterErrors;
+                }
             }
 
             var lines = text.Split('\n');
-            foreach (LintParser.LintParseError err in errs)
+
+            
+            foreach (var error in errs)
             {
-                Program.logger.Log($"Processing error: {err.Message} at line {err.line}, problem: {err.problemChild}");
-                if (text.Contains(err.problemChild))
+                if (error is LintParser.LintParseError lintError)
                 {
-                    if (err.line > 0 && err.line <= lines.Length) { Program.logger.Log("err.line was not greater than 0 or was <= lines.lenght"); }
-                    string line = lines[err.line - 1];
-                    Program.logger.Log("Reported Line = " + err.line + " Line In File = " + line);
-                    int idx = line.IndexOf(err.problemChild);
-                    Program.logger.Log("Found the problem we were looking for " + err.problemChild);
-
-                    Program.logger.Log($"Line {err.line}: {line}");
-                    Program.logger.Log($"Index of problemChild '{err.problemChild}': {idx}");
-
-                    if (idx >= 0)
-                    {
-                        Program.logger.Log("Found index! " + idx);
-                        diagnostics.Add(new Diagnostic
-                        {
-
-                            Range = Range.NewLineRange(err.line - 1, idx, idx + err.problemChild.Length),
-                            Severity = 1,
-                            Source = "ScarbroScript Parse Error",
-                            Message = err.Message
-
-                        });
-
-                    }
-                    else
-                    {
-                        Program.logger.Log(err.problemChild + " was not found in the text");
-                    }
+                    ProcessLintError(lintError, text, lines, diagnostics);
+                }
+                else if (error is Linterpreter.LinterpreterError linterpreterError)
+                {
+                    ProcessLinterpreterError(linterpreterError, text, lines, diagnostics);
                 }
             }
 
             //var lines = text.Split('\n');
-                
-            
-            
+
+
+
             return diagnostics;
+        }
+
+        private void ProcessLintError(LintParser.LintParseError err, string text, string[] lines, List<Diagnostic> diagnostics)
+        {
+            Program.logger.Log($"Processing error: {err.Message} at line {err.line}, problem: {err.problemChild}");
+            if (text.Contains(err.problemChild))
+            {
+                if (err.line <= 0 || err.line > lines.Length)
+                {
+                    Program.logger.Log("err.line was not greater than 0 or was <= lines.length");
+                    return;
+                }
+                string line = lines[err.line - 1];
+                Program.logger.Log("Reported Line = " + err.line + " Line In File = " + line);
+                int idx = line.IndexOf(err.problemChild);
+                Program.logger.Log("Found the problem we were looking for " + err.problemChild);
+
+                Program.logger.Log($"Line {err.line}: {line}");
+                Program.logger.Log($"Index of problemChild '{err.problemChild}': {idx}");
+
+                if (idx >= 0)
+                {
+                    Program.logger.Log("Found index! " + idx);
+                    diagnostics.Add(new Diagnostic
+                    {
+                        Range = Range.NewLineRange(err.line - 1, idx, idx + err.problemChild.Length),
+                        Severity = 1,
+                        Source = "ScarbroScript Parse Error",
+                        Message = err.Message
+                    });
+                }
+                else
+                {
+                    Program.logger.Log(err.problemChild + " was not found in the text");
+                }
+            }
+        }
+
+        private void ProcessLinterpreterError(Linterpreter.LinterpreterError err, string text, string[] lines, List<Diagnostic> diagnostics)
+        {
+            Program.logger.Log($"Processing error: {err.Message} at line {err.line}, problem: {err.problemChild}");
+            if (text.Contains(err.problemChild))
+            {
+                if (err.line <= 0 || err.line > lines.Length)
+                {
+                    Program.logger.Log("err.line was not greater than 0 or was <= lines.length");
+                    return;
+                }
+                string line = lines[err.line - 1];
+                Program.logger.Log("Reported Line = " + err.line + " Line In File = " + line);
+                int idx = line.IndexOf(err.problemChild);
+                Program.logger.Log("Found the problem we were looking for " + err.problemChild);
+
+                Program.logger.Log($"Line {err.line}: {line}");
+                Program.logger.Log($"Index of problemChild '{err.problemChild}': {idx}");
+
+                if (idx >= 0)
+                {
+                    Program.logger.Log("Found index! " + idx);
+                    diagnostics.Add(new Diagnostic
+                    {
+                        Range = Range.NewLineRange(err.line - 1, idx, idx + err.problemChild.Length),
+                        Severity = 1,
+                        Source = "ScarbroScript Potential Runtime Error",
+                        Message = err.Message
+                    });
+                }
+                else
+                {
+                    Program.logger.Log(err.problemChild + " was not found in the text");
+                }
+            }
         }
 
 

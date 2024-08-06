@@ -240,7 +240,7 @@ namespace ScarbroScriptLSP.Analysis
             },
             { typeof(Queue<>), new List<CompletionItem>
                 {
-                    
+
                     new CompletionItem
                     {
                         Label = "enqueue",
@@ -374,6 +374,89 @@ namespace ScarbroScriptLSP.Analysis
                         Detail = "Dictionary Function | 0 Parameters",
                         Documentation = "Returns a collection of all keys in the dictionary"
                     },
+                }
+            },
+            { typeof(string), new List<CompletionItem>
+                {
+
+                    new CompletionItem
+                    {
+                        Label = "substring",
+                        Detail = "String Function | 2 Parameters: startIndex, length",
+                        Documentation = "Returns a substring starting from the specified index with the specified length"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "toLower",
+                        Detail = "String Function | 0 Parameters",
+                        Documentation = "Converts all characters in the string to lower case"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "toUpper",
+                        Detail = "String Function | 0 Parameters",
+                        Documentation = "Converts all characters in the string to upper case"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "indexOf",
+                        Detail = "String Function | 1 Parameter: value",
+                        Documentation = "Returns the index of the first occurrence of the specified value in the string"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "trim",
+                        Detail = "String Function | 0 Parameters",
+                        Documentation = "Removes all leading and trailing white-space characters from the string"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "replace",
+                        Detail = "String Function | 2 Parameters: oldValue, newValue",
+                        Documentation = "Replaces all occurrences of a specified value in the string with another value"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "length",
+                        Detail = "String Function | 0 Parameters",
+                        Documentation = "Returns the length of the string"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "startsWith",
+                        Detail = "String Function | 1 Parameter: value",
+                        Documentation = "Determines whether the beginning of the string matches the specified value"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "endsWith",
+                        Detail = "String Function | 1 Parameter: value",
+                        Documentation = "Determines whether the end of the string matches the specified value"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "split",
+                        Detail = "String Function | 1 Parameter: delimiter",
+                        Documentation = "Splits the string into an array of substrings based on the specified delimiter"
+                    },
+                    new CompletionItem
+                    {
+                        Label = "splitBy",
+                        Detail = "String Function | 1 Parameter: delimiter",
+                        Documentation = "Splits the string into an array of substrings based on the specified delimiter (alternative method)"
+                    }
+                }
+            },
+            { typeof(double), new List<CompletionItem>
+                {
+
+                    new CompletionItem
+                    {
+                        Label = "TEST",
+                        Detail = "Double Function | 2 Parameters: startIndex, length",
+                        Documentation = "Returns a substring starting from the specified index with the specified length"
+                    },
+                    
                 }
             },
 
