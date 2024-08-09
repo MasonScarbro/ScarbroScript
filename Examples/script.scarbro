@@ -1,1 +1,3 @@
-var b = 4 + "mason"
+var b = 4;
+var a = "mason";
+var c = 4 + "mason";

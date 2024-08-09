@@ -263,8 +263,8 @@ namespace ScarbroScriptLSP.Analysis
                 string line = lines[position.Line];
                 if (position.Character <= line.Length)
                 {
-                    
-                    items = GetClassAutoCompletion(line, position, Linterpreter.scopedVariables);
+
+                    items = GetClassAutoCompletion(line, position, Linterpreter.scopedObjects);
                     
                 }
             }
@@ -275,43 +275,37 @@ namespace ScarbroScriptLSP.Analysis
             return new CompletionResponse("2.0", id, items);
         }
 
-        private List<CompletionItem> GetClassAutoCompletion(string line, Position position, Dictionary<string, object> scopedobjs)
+        private List<CompletionItem> GetClassAutoCompletion(string line, Position position, Dictionary<string, ScopedObject> scopedobjs)
         {
             string beforeCursor = line.Substring(0, position.Character);
             int lastDotIndex = beforeCursor.LastIndexOf('.');
-
+            
             if (lastDotIndex > 0)
             {
                 string wordBeforeDot = beforeCursor.Substring(0, lastDotIndex).Trim().Split().Last();
                 Program.logger.Log($"Word before '.': {wordBeforeDot}");
                 if (Linterpreter.lintErrors != null)
                 {
-                    Program.logger.Log("found a Linter Err (will be handled in diagnostics later)");
+                    Program.logger.Log("found a Linter Err (handled now!)");
                 }
-                if (!Linterpreter.scopedVariables.ContainsKey(wordBeforeDot))
+                if (!Linterpreter.scopedObjects.ContainsKey(wordBeforeDot))
                 {
                     Program.logger.Log("Variable Not Found in scope");
                 }
-                if (Linterpreter.scopedVariables.ContainsKey(wordBeforeDot))
+                if (Linterpreter.scopedObjects.ContainsKey(wordBeforeDot))
                 {
-                    Program.logger.Log("Variable Found in scope");
-                    return NativeClassChecker.TryGetNatives(Linterpreter.scopedVariables[wordBeforeDot]);
-                }
-                return NativeClassChecker.TryGetNatives(wordBeforeDot);
-                // This would be for classes built by the user
-                //if (wordBeforeDot == nonNativeClass)
-                //{
-                //    var methods = new List<string> { };
-                //    //... add each method based on what was found
-                //    var items = methods.Select(func => new CompletionItem
-                //    {
-                //        Label = func,
-                //        Detail = "Math Function",
-                //        Documentation = $"Math.{func}() function"
-                //    }).ToList();
+                    if (Linterpreter.scopedObjects[wordBeforeDot].IsClass)
+                    {
+                        Program.logger.Log("Twas A Class (call)!");
+                        return ClassChecker.GetUserClassCompletions(Linterpreter.scopedObjects[wordBeforeDot].Methods);
+                    }
+                    Program.logger.Log($"Variable {wordBeforeDot} Found in scope: " + Linterpreter.scopedObjects[wordBeforeDot]);
+                    return ClassChecker.TryGetNatives(Linterpreter.scopedObjects[wordBeforeDot].ObjectType);
 
-                //    return new CompletionResponse("2.0", id, items);
-                //}
+                }
+                
+                return ClassChecker.TryGetNatives(wordBeforeDot);
+                
             }
             Program.logger.Log($"Err: lastDotIndex was < 0");
             return null;

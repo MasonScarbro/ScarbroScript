@@ -21,16 +21,13 @@ namespace ScarbroScriptLSP.Analysis
             }
         }
 
-        public static Dictionary<string, object> scopedVariables = new Dictionary<string, object>();
-        public static Dictionary<string, object> scopedClasses = new Dictionary<string, object>();
+        public static Dictionary<string, ScopedObject> scopedObjects = new Dictionary<string, ScopedObject>();
+       
         public static List<Exception> lintErrors = new List<Exception>();
         public class Scoper
         {
 
-            public Scoper()
-            {
-
-            }
+            public Scoper() { }
 
 
             public Scoper(List<Stmt> stmts)
@@ -40,11 +37,22 @@ namespace ScarbroScriptLSP.Analysis
                     if (stmt is Stmt.Var stmtv)
                     {
                         Program.logger.Log("Inside Scoper Just found a Variable");
-                        StoreScopedObject(stmtv.name.lexeme, EvaluateType(stmtv.initializer));
+                        var variableType = EvaluateType(stmtv.initializer);
+                        scopedObjects[stmtv.name.lexeme] = new ScopedObject(variableType);
                     }
                     if (stmt is Stmt.Class stmtc)
                     {
-
+                        List<UserBuiltMethod> _methods = new List<UserBuiltMethod>();
+                        foreach (Stmt.Function stmtf in stmtc.methods)
+                        {
+                            _methods.Add(
+                                new UserBuiltMethod(
+                                    stmtf.name.lexeme,
+                                    stmtf.parameters.Count
+                                    )
+                                );
+                        }
+                        scopedObjects[stmtc.name.lexeme] = new ScopedObject(null, _methods);
                     }
                 }
             }
@@ -60,10 +68,7 @@ namespace ScarbroScriptLSP.Analysis
             /// </summary>
             /// <param name="name"></param>
             /// <param name="type"></param>
-            public void StoreScopedObject(string name, object type)
-            {
-                scopedVariables[name] = type;
-            }
+            
 
 
             private object EvaluateType(Expr value)
@@ -74,7 +79,7 @@ namespace ScarbroScriptLSP.Analysis
                 if (value is Expr.Variable ev)
                 {
                     Program.logger.Log("Value was a variable");
-                    if (!scopedVariables.ContainsKey(ev.name.lexeme))
+                    if (!scopedObjects.ContainsKey(ev.name.lexeme))
                     {
                         lintErrors.Add(new LinterpreterError
                             (
@@ -84,7 +89,7 @@ namespace ScarbroScriptLSP.Analysis
                             ));
                     }
                     //else
-                    return scopedVariables[ev.name.lexeme];
+                    return scopedObjects[ev.name.lexeme].ObjectType;
                 }
                 //if its an array just return the type so it can be scoped
                 if (value is Expr.Array)
@@ -101,6 +106,10 @@ namespace ScarbroScriptLSP.Analysis
                         if (expcv.name.lexeme.Equals("Queue")) return typeof(Queue<>);
                         if (expcv.name.lexeme.Equals("Stack")) return typeof(Stack<>);
                         if (expcv.name.lexeme.Equals("Dict")) return typeof(HashSet<>);
+                        if (scopedObjects.ContainsKey(expcv.name.lexeme))
+                        {
+                            return scopedObjects[expcv.name.lexeme];
+                        }
 
                     }
                 }
@@ -140,12 +149,12 @@ namespace ScarbroScriptLSP.Analysis
                             CheckOperands(expb, left, right);
                             return typeof(double);
                         case TokenType.PLUS:
-                            if (left is double && right is double)
+                            if ((Type)left == typeof(double) && (Type)right == typeof(double))
                             {
                                 Program.logger.Log("Was a Double (Binary)");
                                 return typeof(double);
                             }
-                            if (left is string || right is string)
+                            if ((Type)left == typeof(string) || (Type)right == typeof(string))
                             {
                                 Program.logger.Log("Was a string (Binary)");
                                 return typeof(string);
@@ -166,7 +175,7 @@ namespace ScarbroScriptLSP.Analysis
                 {
                     //If literal just get type
                     Program.logger.Log("Inside Literal and was: " + expl.value.GetType());
-                    return expl.value;
+                    return expl.value.GetType();
                 }
                 if (value is Expr.Logical)
                 {
@@ -199,6 +208,11 @@ namespace ScarbroScriptLSP.Analysis
             public List<Exception> GetLinterpreterErrors()
             {
                 return lintErrors;
+            }
+
+            public Dictionary<string, ScopedObject> GetscopedObjects ()
+            {
+                return scopedObjects;
             }
         }
 
