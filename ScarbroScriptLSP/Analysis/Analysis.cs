@@ -263,9 +263,17 @@ namespace ScarbroScriptLSP.Analysis
                 string line = lines[position.Line];
                 if (position.Character <= line.Length)
                 {
-
+                    // Suggestions for classes triggered by a '.'
                     items = GetClassAutoCompletion(line, position, Linterpreter.scopedObjects);
-                    
+
+                    // if no dot is found then give the other suggestions
+                    if (items == null || items.Count == 0)
+                    {
+                        
+                        // Provide suggestions based on the current word
+                        items = GetSuggestionsForCurrentWord(line, position, Linterpreter.scopedObjects);
+                        
+                    }
                 }
             }
 
@@ -311,6 +319,35 @@ namespace ScarbroScriptLSP.Analysis
             return null;
         }
 
-        
+        private List<CompletionItem> GetSuggestionsForCurrentWord(string line, Position position, Dictionary<string, ScopedObject> scopedObjects)
+        {
+            var items = new List<CompletionItem>();
+            string beforeCursor = line.Substring(0, position.Character);
+            string currentWord = beforeCursor.Trim().Split().Last();
+            Program.logger.Log($"Current word: {currentWord}");
+            if (!string.IsNullOrEmpty(currentWord))
+            {
+                foreach (string key in scopedObjects.Keys)
+                {
+                    if (key.Contains(currentWord) || currentWord.Contains(key))
+                    {
+                        items.Add(
+                            new CompletionItem
+                            {
+                                Label = key,
+                                Detail = scopedObjects[key].ObjectType.GetType().ToString(),
+                                Documentation = "User Variable"
+                            }
+                          );
+                    }
+                }
+                // add any keywords
+                KeyWordChecker.TryGetKeywordCompletions(currentWord, items);
+                
+            }
+            return items;
+        }
+
+
     }
 }

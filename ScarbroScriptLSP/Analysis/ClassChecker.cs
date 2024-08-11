@@ -485,9 +485,9 @@ namespace ScarbroScriptLSP.Analysis
 
                     new CompletionItem
                     {
-                        Label = "TEST",
-                        Detail = "Double Function | 2 Parameters: startIndex, length",
-                        Documentation = "Returns a substring starting from the specified index with the specified length"
+                        Label = "compareTo",
+                        Detail = "Double Function | 1 Parameters: num",
+                        Documentation = "Returns a compared"
                     },
                     
                 }

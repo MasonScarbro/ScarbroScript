@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AstPrinter.cs" />
+    <Compile Include="NativeMods\NumberRunValueMod.cs" />
     <Compile Include="NativeMods\StackMod.cs" />
     <Compile Include="NativeMods\QeueMod.cs" />
     <Compile Include="NativeMods\KVMod.cs" />

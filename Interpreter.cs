@@ -391,6 +391,10 @@ namespace ScarbroScript
                 obj = new StringModRunValueI(stobj);
 
             }
+            if (obj is double objd)
+            {
+                obj = new NumberModRunValueI(objd);
+            }
             if (obj is List<object> aobj)
             {
                 obj = new ArrayModRunValueI(aobj);

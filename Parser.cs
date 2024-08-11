@@ -457,6 +457,7 @@ namespace ScarbroScript
             {
                 intializer = Expression();
             }
+            Console.WriteLine("Initializer was: " + intializer);
 
             ConsumeEither(TokenType.SEMICOLON, TokenType.FOREACH , "Expected ';' after your variable declaration");
             return new Stmt.Var(name, intializer);
