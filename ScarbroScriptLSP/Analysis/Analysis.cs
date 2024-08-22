@@ -181,7 +181,47 @@ namespace ScarbroScriptLSP.Analysis
             var encodedUri = new Uri(uri).AbsoluteUri;
             Program.logger.Log($"Handling CodeAction for URI: {encodedUri}");
             var document = documents[encodedUri];
+            var lines = document.Split(('\n'));
+            Program.logger.Log("Inside Hover");
+            string line = lines[position.Line];
+            Program.logger.Log("Inside Hover, Line: " +  line);
+            if (position.Character >= 0 && position.Character < line.Length)
+            {
+                    // Extract the word by reading from the character index left and right
+                string hoveredWord = GetWordAtPosition(line, position.Character);
+                Program.logger.Log("Inside Hover, HoveredWord: " + hoveredWord);
+                if (Linterpreter.scopedObjects.ContainsKey(hoveredWord))
+                {
+                    return new HoverResponse("2.0", id, $" line: {position.Line} | '{hoveredWord}' | type: {Linterpreter.scopedObjects[hoveredWord].ObjectType} in File: {uri}");
+                }
+                    
+            }
             return new HoverResponse("2.0", id, $"File: {uri} Characters: {document.Length}");
+        }
+
+        private string GetWordAtPosition(string line, int characterIndex)
+        {
+            if (string.IsNullOrWhiteSpace(line) || characterIndex < 0 || characterIndex >= line.Length)
+            {
+                return string.Empty;
+            }
+
+            // Start moving left from the character index until you hit a whitespace or the start of the line
+            int start = characterIndex;
+            while (start > 0 && !char.IsWhiteSpace(line[start - 1]))
+            {
+                start--;
+            }
+
+            // Start moving right from the character index until you hit a whitespace or the end of the line
+            int end = characterIndex;
+            while (end < line.Length && !char.IsWhiteSpace(line[end]))
+            {
+                end++;
+            }
+
+            // Extract the word
+            return line.Substring(start, end - start);
         }
 
         public DefinitionResponse Definition(int id, string uri, Position position)
@@ -329,7 +369,7 @@ namespace ScarbroScriptLSP.Analysis
             {
                 foreach (string key in scopedObjects.Keys)
                 {
-                    if (key.Contains(currentWord) || currentWord.Contains(key))
+                    if (key.Contains(currentWord) || currentWord.Contains(key) || key.Contains(currentWord.Substring(0)))
                     {
                         items.Add(
                             new CompletionItem
