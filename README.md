@@ -23,6 +23,22 @@ Is Keyword: Borrowed from C#, the is keyword enhances type-checking capabilities
 6. Context-Based Features
 Exists Keyword: Introduced the exists keyword to check the existence of previous items within context, aiding in data structure manipulation and error handling.
 
+# ScarbroScriptLSP
+Error Handling
+
+Parser Errors: The LSP handles basic parser errors, providing real-time feedback to developers for syntax issues during code writing.
+Runtime Errors: Some Basic runtime error detection is supported, allowing users to catch and address issues as they arise during execution.
+Autocompletion
+
+Auto-Generation: The LSP supports basic autocompletion, automatically generating suggestions for methods, variables, and functions based on the current context.
+Contextual Suggestions: Autocompletion adapts based on the surrounding code, enhancing development speed and accuracy.
+Hover Requests
+
+Information on Demand: Hover requests are supported, allowing users to hover over elements in the code to receive detailed information such as type definitions, documentation, and more. This feature aids in quick reference and learning without disrupting the coding flow.
+![Method Auto Generation](image.png)
+![alt text](image-1.png)
+![alt text](image-2.png)
+![Picture Showing Runtime Errors work](image-3.png)
 https://github.com/MasonScarbro/ScarbroScript/assets/120221711/868d6e4a-8bda-40bc-a4bd-f860a866b5b7
 
 
