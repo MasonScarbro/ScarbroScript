@@ -47,7 +47,7 @@
     <Compile Include="DerivativeParser\Expressions.cs" />
     <Compile Include="DerivativeParser\Formula.cs" />
     <Compile Include="DerivativeParser\MathParser.cs" />
-    <Compile Include="DerivativeParser\Program.cs" />
+    <Compile Include="DerivativeParser\DerParser.cs" />
     <Compile Include="DerivativeParser\Token.cs" />
     <Compile Include="DerivativeParser\Tokenizer.cs" />
     <Compile Include="DerivativeParser\TokenType.cs" />
